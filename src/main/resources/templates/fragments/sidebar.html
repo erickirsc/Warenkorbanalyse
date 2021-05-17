@@ -42,19 +42,19 @@
         <ul class="nav nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-header">Navigation</li>
             <li class="nav-item">
-                <a class="nav-link text-white" role="button">
+                <a th:href="@{/dashboard}" class="nav-link text-white" role="button">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
                     <p>Dashboard</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" role="button">
-                    <i class="nav-icon fas fa-chart-pie"></i>
-                    <p>Marketing</p>
+                <a th:href="@{/marketing-measures}" class="nav-link text-white" role="button">
+                    <i class="nav-icon fas fa-list"></i>
+                    <p>Marketingmaßnahmen</p>
                 </a>
             </li>
             <li class="nav-item position-fixed w-100 bottom-0">
-                <a class="nav-link text-white" role="button">
+                <a th:href="@{/settings}" class="nav-link text-white" role="button">
                     <i class="nav-icon fas fa-cog"></i>
                     <p>Einstellungen</p>
                 </a>
