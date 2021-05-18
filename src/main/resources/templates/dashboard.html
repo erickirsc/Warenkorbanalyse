@@ -101,8 +101,8 @@
                         <div class="info-box">
                             <span class="info-box-icon bg-green"><i class="ion ion-arrow-graph-up-right"></i></span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Top</span>
-                                <span class="info-box-number">Lindt Schokolade 250g</span>
+                                <span class="info-box-text">Umsatzstärkstes Produkt</span>
+                                <span th:text="${topProduct}" class="info-box-number">Lindt Schokolade 250g</span>
                             </div>
                         </div>
                     </div>
@@ -110,8 +110,8 @@
                         <div class="info-box">
                             <span class="info-box-icon bg-red"><i class="ion ion-arrow-graph-down-right"></i></span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Flop</span>
-                                <span class="info-box-number">Tymbark Kirsche</span>
+                                <span class="info-box-text">Umsatzschwächstes Produkt</span>
+                                <span th:text="${flopProduct}" class="info-box-number">Tymbark Kirsche</span>
                             </div>
                         </div>
                     </div>
@@ -121,8 +121,8 @@
                         <div class="info-box">
                             <span class="info-box-icon bg-blue"><i class="ion ion-calendar"></i></span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Bester Einkaufstag</span>
-                                <span class="info-box-number">Mittwoch</span>
+                                <span class="info-box-text">Umsatzstärkster Einkaufstag</span>
+                                <span th:text="${topDay}" class="info-box-number">Mittwoch</span>
                             </div>
                         </div>
                     </div>
@@ -130,8 +130,8 @@
                         <div class="info-box">
                             <span class="info-box-icon bg-blue"><i class="ion ion-clock"></i></span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Beste Einkaufsuhrzeit</span>
-                                <span class="info-box-number">13:00</span>
+                                <span class="info-box-text">Umsatzstärkste Einkaufsuhrzeit</span>
+                                <span th:text="${topTime}" class="info-box-number">13:00</span>
                             </div>
                         </div>
                     </div>
