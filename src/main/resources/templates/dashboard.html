@@ -62,10 +62,10 @@
                             <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog"
                                  aria-labelledby="uploadModalLabel">
                                 <div class="modal-dialog" role="document">
-                                    <form method="post" action="" id="csvUpload" class="modal-content">
+                                    <form method="post" th:action="@{/dashboard/upload}" id="csvUpload" class="modal-content" enctype="multipart/form-data">
                                         <div class="modal-body">
                                             <h4>CSV Datei auswählen</h4>
-                                            <input type="file" accept="text/csv" class="form-control" id="customFile"/>
+                                            <input type="file" name="file" accept="text/csv" class="form-control" id="customFile"/>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">
