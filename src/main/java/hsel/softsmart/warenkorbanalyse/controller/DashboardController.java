@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import weka.core.Instances;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -34,6 +35,7 @@ public class DashboardController {
         model.addAttribute("topTime", result.getTopTime());
         model.addAttribute("topProduct", result.getTopProduct());
         model.addAttribute("flopProduct", result.getFlopProduct());
+        model.addAttribute("aprioriValues", result.getAprioriValues());
 
         return "dashboard";
     }

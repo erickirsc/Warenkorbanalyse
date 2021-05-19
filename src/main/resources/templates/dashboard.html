@@ -145,22 +145,12 @@
                                 <table class="table table-condensed">
                                     <tbody>
                                     <tr>
-                                        <th>Warengruppe</th>
+                                        <th>Produkt</th>
                                         <th>wird oft gekauft mit</th>
                                     </tr>
-                                    <tr>
-                                        <td rowspan="2" class="align-middle">Fertiggerichte</td>
-                                        <td>Bier | Frischfleisch</td>
-                                    </tr>
-
-                                    <tr>
-
-                                        <td>Bier | Konserven</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Backwaren</td>
-                                        <td>Tiernahrung | KaffeeRee</td>
+                                    <tr th:each="pos: ${aprioriValues}">
+                                        <td th:text="${pos.product}">Backwaren</td>
+                                        <td th:text="${pos.boughtTogetherWith}">Tiernahrung, KaffeeRee</td>
                                     </tr>
                                     </tbody>
                                 </table>

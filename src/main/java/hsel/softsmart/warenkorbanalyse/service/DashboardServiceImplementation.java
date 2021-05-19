@@ -66,6 +66,7 @@ public class DashboardServiceImplementation implements DashboardService {
     public Result processData(Instances csvData, Instances arffData) {
         String topDay = weka.findMaximum(arffData, 5);
         String topTime = weka.findMaximum(arffData, 6);
+        String[] aprioris = weka.makeApriori(productData(csvData));
         String topProduct = "Bier";
         String flopProduct = "Konserven";
 
@@ -74,6 +75,11 @@ public class DashboardServiceImplementation implements DashboardService {
         result.setTopTime(topTime);
         result.setTopProduct(topProduct);
         result.setFlopProduct(flopProduct);
+
+        for (String apriori : aprioris) {
+            String[] split = apriori.split("==>");
+            result.addAprioriValue(split[1].trim(), split[0].trim());
+        }
 
         return result;
     }
@@ -96,5 +102,15 @@ public class DashboardServiceImplementation implements DashboardService {
         nc.setInputFormat(data);
         data = Filter.useFilter(data, nc);
         return data;
+    }
+
+    private Instances productData(Instances data) {
+        Instances productData = new Instances(data);
+
+        for (int i = 0; i < 11; i++) {
+            productData.deleteAttributeAt(0);
+        }
+
+        return productData;
     }
 }

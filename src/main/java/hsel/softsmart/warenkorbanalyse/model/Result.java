@@ -2,12 +2,9 @@ package hsel.softsmart.warenkorbanalyse.model;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.util.HashMap;
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Data
@@ -20,9 +17,18 @@ public class Result {
     private String flopProduct;
     private String topDay;
     private String topTime;
-    /*private Map<String, List<String>> apriori = new HashMap<>();
 
-    public void addApriori(String group, String ... products) {
-        //TODO: Implement addApriori
-    }*/
+    @OneToMany(
+            mappedBy = "result",
+            cascade = CascadeType.ALL
+    )
+    private List<AprioriValue> aprioriValues = new ArrayList<>();
+
+    public void addAprioriValue(String product, String boughtTogetherWith) {
+        AprioriValue aprioriValue = new AprioriValue();
+        aprioriValue.setProduct(product);
+        aprioriValue.setBoughtTogetherWith(boughtTogetherWith);
+        aprioriValues.add(aprioriValue);
+        aprioriValue.setResult(this);
+    }
 }
