@@ -1,7 +1,7 @@
 package hsel.softsmart.warenkorbanalyse.controller;
 
 import hsel.softsmart.warenkorbanalyse.model.Result;
-import hsel.softsmart.warenkorbanalyse.service.DashboardService;
+import hsel.softsmart.warenkorbanalyse.service.AnalysisService;
 import hsel.softsmart.warenkorbanalyse.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,19 +17,19 @@ import java.io.File;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/dashboard")
-public class DashboardController {
+@RequestMapping("/analysis")
+public class AnalysisController {
 
-    private final DashboardService dashboardService;
+    private final AnalysisService analysisService;
 
     @Autowired
-    public DashboardController(DashboardService dashboardService) {
-        this.dashboardService = dashboardService;
+    public AnalysisController(AnalysisService analysisService) {
+        this.analysisService = analysisService;
     }
 
     @GetMapping
     public String index(Model model) {
-        Result result = dashboardService.findLastResult();
+        Result result = analysisService.findLastResult();
 
         model.addAttribute("topDay", result.getTopDay());
         model.addAttribute("topTime", result.getTopTime());
@@ -37,22 +37,22 @@ public class DashboardController {
         model.addAttribute("flopProduct", result.getFlopProduct());
         model.addAttribute("aprioriValues", result.getAprioriValues());
 
-        return "dashboard";
+        return "analysis";
     }
 
     @PostMapping("/upload")
     public String upload(@RequestParam("file") MultipartFile file) throws IOException {
         File csvFile = FileUtil.parse(file);
 
-        Instances csvData = dashboardService.loadCSVData(csvFile);
-        Instances arffData = dashboardService.loadArffData(csvData);
+        Instances csvData = analysisService.loadCSVData(csvFile);
+        Instances arffData = analysisService.loadArffData(csvData);
 
         csvFile.delete();
 
-        Result result = dashboardService.processData(csvData, arffData);
+        Result result = analysisService.processData(csvData, arffData);
 
-        dashboardService.saveResult(result);
+        analysisService.saveResult(result);
 
-        return "redirect:/dashboard";
+        return "redirect:/analysis";
     }
 }

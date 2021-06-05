@@ -16,13 +16,13 @@ import weka.filters.unsupervised.attribute.NumericCleaner;
 import java.io.File;
 
 @Service
-public class DashboardServiceImplementation implements DashboardService {
+public class AnalysisServiceImplementation implements AnalysisService {
 
     private final WekaBspStud weka;
     private final ResultRepository resultRepository;
 
     @Autowired
-    public DashboardServiceImplementation(WekaBspStud weka, ResultRepository resultRepository) {
+    public AnalysisServiceImplementation(WekaBspStud weka, ResultRepository resultRepository) {
         this.weka = weka;
         this.resultRepository = resultRepository;
     }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>KaufDort | Dashboard</title>
+    <title>KaufDort | Auswertung</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -35,6 +35,9 @@
     <!-- summernote -->
     <link rel="stylesheet" href="../static/plugins/summernote/summernote-bs4.min.css"
           th:href="@{/plugins/summernote/summernote-bs4.min.css}">
+    <!-- Custom style -->
+    <link rel="stylesheet" href="../static/css/color.css"
+          th:href="@{/css/color.css}">
 </head>
 <body class="hold-transition">
 <div class="wrapper">
@@ -44,7 +47,7 @@
         <!-- Content Header (Page header) -->
         <div class="content-header mb-5">
             <div class="container-fluid">
-                <h1>Dashboard</h1>
+                <h1>Auswertung</h1>
             </div>
         </div>
         <!-- Main content -->
@@ -56,23 +59,23 @@
                             <button type="button" class="btn btn-default" data-toggle="modal"
                                     data-target="#uploadModal">
                                 <!-- Button trigger modal -->
-                                <i class="ion-upload"></i> CSV Upload
+                                <i class="ion-upload"></i> Kundendaten hochladen
                             </button>
                             <!-- Modal -->
                             <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog"
                                  aria-labelledby="uploadModalLabel">
                                 <div class="modal-dialog" role="document">
-                                    <form method="post" th:action="@{/dashboard/upload}" id="csvUpload" class="modal-content" enctype="multipart/form-data">
+                                    <form method="post" th:action="@{/analysis/upload}" id="csvUpload" class="modal-content" enctype="multipart/form-data">
                                         <div class="modal-body">
-                                            <h4>CSV Datei auswählen</h4>
-                                            <input type="file" name="file" accept="text/csv" class="form-control" id="customFile"/>
+                                            <h4>Kundendaten auswählen</h4>
+                                            <input type="file" name="file" accept="text/csv, .csv" class="form-control" id="customFile"/>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">
                                                 Schließen
                                             </button>
                                             <button type="submit" class="btn btn-primary">
-                                                Hochladen
+                                                Kundendaten auswerten
                                             </button>
                                         </div>
                                     </form>
@@ -90,8 +93,8 @@
                                 <a class="dropdown-item" href="#">Datensatz 5</a>
                             </div>
                         </div>
-                        <div class="d-block mt-3">
-                            Ergebnisse
+                        <div class="d-block mt-5">
+                            <h5>Ergebnisse</h5>
                         </div>
                         <hr>
                     </div>
@@ -121,7 +124,7 @@
                         <div class="info-box">
                             <span class="info-box-icon bg-blue"><i class="ion ion-calendar"></i></span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Umsatzstärkster Einkaufstag</span>
+                                <span class="info-box-text">Umsatzstärkster Einkaufstag der Woche</span>
                                 <span th:text="${topDay}" class="info-box-number">Mittwoch</span>
                             </div>
                         </div>
@@ -130,7 +133,7 @@
                         <div class="info-box">
                             <span class="info-box-icon bg-blue"><i class="ion ion-clock"></i></span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Umsatzstärkste Einkaufsuhrzeit</span>
+                                <span class="info-box-text">Umsatzstärkste Einkaufsuhrzeit der Woche</span>
                                 <span th:text="${topTime}" class="info-box-number">13:00</span>
                             </div>
                         </div>
@@ -138,22 +141,27 @@
                 </div>
                 <div class="row mt-5">
                     <div class="col mb-3">
-                        Apriori Analyse
+                        <h5>Produkte, die zusammen gekauft werden</h5>
+                        <hr>
                         <div class="box mt-3">
                             <!-- /.box-header -->
                             <div class="box-body no-padding">
-                                <table class="table table-condensed">
-                                    <tbody>
-                                    <tr>
-                                        <th>Produkt</th>
-                                        <th>wird oft gekauft mit</th>
-                                    </tr>
-                                    <tr th:each="pos: ${aprioriValues}">
-                                        <td th:text="${pos.product}">Backwaren</td>
-                                        <td th:text="${pos.boughtTogetherWith}">Tiernahrung, KaffeeRee</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                <div class="card-body table-responsive p-0" style="height: 300px;">
+                                    <table class="table table-head-fixed table-condensed text-nowrap">
+                                        <thead>
+                                        <tr>
+                                            <th>Produkt</th>
+                                            <th>wird oft gekauft mit</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="pos: ${aprioriValues}">
+                                            <td th:text="${pos.product}">Backwaren</td>
+                                            <td th:text="${pos.boughtTogetherWith}">Tiernahrung, KaffeeRee</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <!-- /.box-body -->
                         </div>

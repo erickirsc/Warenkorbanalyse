@@ -61,42 +61,20 @@
                             <!-- /.box-header -->
                             <div class="box-body no-padding">
                                 <table class="table table-condensed">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2">Maßnahme</th>
+                                    </tr>
+                                    </thead>
                                     <tbody>
-                                    <tr>
-                                        <th>Maßnahme</th>
-                                        <th>Aktion</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Maßnahme</td>
+                                    <tr th:each="measure: ${marketingMeasures}">
+                                        <td th:text="${measure.measure}">Maßnahme</td>
                                         <td>
                                             <a class="btn bg-blue">
                                                 <i class="ion-edit"></i>
                                             </a>
-                                            <a class="btn bg-danger">
-                                                <i class="ion-trash-a"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Maßnahme</td>
-                                        <td>
-                                            <a class="btn bg-blue">
-                                                <i class="ion-edit"></i>
-                                            </a>
-                                            <a class="btn bg-danger">
-                                                <i class="ion-trash-a"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Maßnahme</td>
-                                        <td>
-                                            <a class="btn bg-blue">
-                                                <i class="ion-edit"></i>
-                                            </a>
-                                            <a class="btn bg-danger">
+                                            <a class="btn bg-danger"
+                                               th:href="@{/marketing-measures/delete/{id}(id=${measure.id})}">
                                                 <i class="ion-trash-a"></i>
                                             </a>
                                         </td>

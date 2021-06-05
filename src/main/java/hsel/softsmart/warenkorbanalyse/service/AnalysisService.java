@@ -5,10 +5,14 @@ import weka.core.Instances;
 
 import java.io.File;
 
-public interface DashboardService {
+public interface AnalysisService {
     Instances loadCSVData(File file);
+
     Instances loadArffData(Instances csvData);
+
     Result processData(Instances csvData, Instances arffData);
+
     void saveResult(Result result);
+
     Result findLastResult();
 }

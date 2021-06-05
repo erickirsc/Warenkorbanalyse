@@ -1,15 +1,19 @@
 package hsel.softsmart.warenkorbanalyse.weka;
 
-import java.io.*;
-import java.util.*;
-
-import weka.associations.*;
+import weka.associations.Apriori;
+import weka.associations.AssociationRule;
+import weka.classifiers.rules.ZeroR;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Instances;
-import weka.core.converters.*;
+import weka.core.converters.ArffLoader;
+import weka.core.converters.ArffSaver;
+import weka.core.converters.CSVLoader;
 import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.*;
-import weka.classifiers.rules.*;
+import weka.filters.unsupervised.attribute.NumericCleaner;
+import weka.filters.unsupervised.attribute.NumericToNominal;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * Beispielprogramm, um WeKa in eclipse zu verwenden. <br>
@@ -17,14 +21,14 @@ import weka.classifiers.rules.*;
  * <b>Bislang keinerlei Fehlerbehandlung, selbst drum kuemmern! </b><br>
  * Weitere Einstellungen (falls noetig) selbst recherchieren.<br>
  * Rueckgabestrings der Methoden ggf. nach den eigenen Beduerfnissen anpassen.<br>
- * 
+ *
  * <br>
  * Die Rohdaten liegen im CSV-Format vor und enthalten die folgenden 26
  * Attribute: <br>
  * 0..9 Kundendaten und Einkaufsverhalten <br>
  * 10 Einkaufssumme <br>
  * 11..25 gekaufte Waren (Warengruppen)
- * 
+ *
  * <br>
  * <br>
  * fertige Analysen: <br>
@@ -37,222 +41,220 @@ import weka.classifiers.rules.*;
  * - Kundengruppen finden (Clusteranalyse) <br>
  * // String findCluster (Instances daten, int number) <br>
  * <br>
- * 
+ *
  * @author Hilke Fasse
  */
 
 public class WekaBspStud {
 
-	/**
-	 * ermittelt die angegebene Anzahl der Cluster
-	 * 
-	 * @param daten  alleDaten, nurKunden, nurWaren - je nach Analyse
-	 * @param number Anzahl der Cluster, die ermittelt werden sollen
-	 * @return Die einzelnen Cluster in einem String, getrennt durch \n
-	 * @throws Exception Fehlerbehandlung muss noch erledigt werden
-	 */
-	public String findCluster(Instances daten, int number) throws Exception {
-		String[] result;
+    public static void main(String[] args) throws Exception {
 
-		SimpleKMeans model = new SimpleKMeans();
-		model.setNumClusters(number);
+        // Eigenen Dateipfad eintragen, nicht meinen nehmen ;-)
+        String path = "/home/falk/Downloads/";
+        String roh = path + "kd.csv";
+        String arffDat = path + "kd.arff";
 
-		model.buildClusterer(daten);
+        Instances alleDaten, nurWaren, nurKunden, arffDaten;
 
-		// Final cluster centroids holen
-		result = model.getClusterCentroids().toString().split("@data\n");
-		return (result[1].toString() + "\n");
-	}
+        WekaBspStud dt = new WekaBspStud();
 
-	// Hilfsmethode, um fuer die Auswertung unnoetige Angaben rauszuloeschen
-	private String clearAprioriList(String oneRule) {
-		String temp = "";
+        // CSV-Datei laden
+        CSVLoader loader = new CSVLoader();
+        loader.setSource(new File(roh));
+        alleDaten = loader.getDataSet();
 
-		// Weka-blabla raus loeschen
-		for (int i = 0; i < oneRule.length(); i++) {
-			Character a = oneRule.charAt(i);
-			if ((Character.isLetter(a)) || (a == ',')) {
-				temp = temp + a;
-			}
-		}
-		return temp;
-	}
+        // 0 durch ? ersetzen, um fuer die Auswertung nur die Waren zu
+        // beruecksichtigen, die gekauft wurden
+        NumericCleaner nc = new NumericCleaner();
+        nc.setMinThreshold(1.0); // Schwellwert auf 1 setzen
+        nc.setMinDefault(Double.NaN); // alles unter 1 durch ? ersetzen
+        nc.setInputFormat(alleDaten);
+        alleDaten = Filter.useFilter(alleDaten, nc); // Filter anwenden
 
-	/**
-	 * Ermittelt aus den Kundendaten die Warengruppen, die haeufig zusammen gekauft
-	 * werden Die Regeln werden ueber den Apriori-Algorithmus ermittelt
-	 * 
-	 * @param daten nurWaren - fuer die Analyse, der zusammen gekauften Waren <br>
-	 *              je nach Analyse auch alleDaten oder nurKunden als daten
-	 * @return Waren, die zusammen gekauft werden, als Stringarray, dessen Dimension
-	 *         sich aus der Anzahl der gefundenen Regeln ergibt
-	 * @throws Exception Fehlerbehandlung muss noch erledigt werden
-	 */
-	public String[] makeApriori(Instances daten) throws Exception {
+        /*
+         * ARFF - Format der Daten fuer Weka erzeugen Das ist zwar komisch (erst
+         * speichern und dann wieder einlesen), geht sicher auch anders. Drueber
+         * nachdenken .. irgendwann ;-)
+         */
+        // als ARFF speichern
+        ArffSaver saver = new ArffSaver();
+        saver.setInstances(alleDaten);
+        saver.setFile(new File(arffDat));
+        saver.writeBatch();
 
-		// umwandeln in gekauft / nicht gekauft (0/1)
-		NumericCleaner nc = new NumericCleaner();
-		nc.setMaxThreshold(1.0); // Schwellwert auf 1 setzen
-		nc.setMaxDefault(1.0); // alles ueber Schwellwert durch 1 ersetzen
-		nc.setInputFormat(daten);
-		daten = Filter.useFilter(daten, nc); // Filter anwenden.
+        // Arff-Datei laden
+        ArffLoader aLoader = new ArffLoader();
+        aLoader.setSource(new File(arffDat));
+        arffDaten = aLoader.getDataSet();
 
-		// Die Daten als nominale und nicht als numerische Daten setzen
-		NumericToNominal num2nom = new NumericToNominal();
-		num2nom.setAttributeIndices("first-last");
-		num2nom.setInputFormat(daten);
-		daten = Filter.useFilter(daten, num2nom);
+        /*
+         * ******************* Start der Auswertungen ***********************
+         */
 
-		Apriori model = new Apriori();
-		model.buildAssociations(daten);
-
-		List<AssociationRule> rulesA = model.getAssociationRules().getRules();
-		int anzRules = rulesA.size();
-
-		String[] tmp = new String[anzRules];
-
-		// Ergebnis huebsch zusammensetzen
-		for (int i = 0; i < anzRules; i++) {
-			tmp[i] = clearAprioriList(rulesA.get(i).getPremise().toString()) + " ==> "
-					+ clearAprioriList(rulesA.get(i).getConsequence().toString());
-		}
-		return tmp;
-	}
-
-	/**
-	 * liefert den haeufigsten Wert eines Attributs zurueck benutzt ZeroR, eine
-	 * Wekafunktion fuer das haeufigste Element der nominalen Attribute, bei
-	 * numerischen Werten wird der Mittelwert geliefert!
-	 * 
-	 * @param daten Hier wichtig: Daten im <b>arffFormat!</b>
-	 * 
-	 * @param index - Fuer welches Attribut soll das Maximum bestimmt werden (0..9
-	 *              hier sinnvoll, da nur diese Daten nominal sind)
-	 * @return haeufigstes Element als String
-	 * @throws Exception Fehlerbehandlung muss noch erledigt werden
-	 */
-	public String findMaximum(Instances daten, int index) throws Exception {
-		String[] max;
-
-		ZeroR za = new ZeroR(); // wekafunktion
-
-		daten.setClass(daten.attribute(index)); // Attribut dessen Maximum
-												// ermittelt werden soll
-		za.buildClassifier(daten);
-
-		max = za.toString().split(": "); // weka -blabla wegnehmen
-
-		return (max[1]);
-	}
-
-	/**
-	 * Verteilung der einzelnen Attribute Kundendaten und Einkaufsverhalten, als
-	 * <b>absolute</b> Werte
-	 * 
-	 * @param daten - alleDaten
-	 * @param index - welches Attribut soll ausgewertet werden?
-	 * @return Verteilung des Attributs
-	 */
-	public String attDistributionAbsolute(Instances daten, int index) {
-		int attCount, attNum = index;
-		String result;
-
-		result = daten.attribute(attNum).name() + ": ";
-
-		// Anzahl der moeglichen Werte
-		attCount = daten.attributeStats(attNum).distinctCount;
-
-		for (int i = 0; i < attCount; i++) {
-			result += "\"" + daten.attribute(attNum).value(i) + "\"" + " = "
-					+ daten.attributeStats(attNum).nominalCounts[i] + "  ";
-		}
-
-		return result;
-	}
+        // Top-Werte ermitteln
+        System.out.println(">>>>>--- Top-Wert ermitteln ----\n");
+        System.out.println("Haeufigste Altersgruppe: " + dt.findMaximum(arffDaten, 1) + " Jahre\n");
 
 
-	public static void main(String[] args) throws Exception {
+        // Clusteranalyse mit 5 Clustern ueber alle Daten
+        System.out.println(">>>>>--- Clusteranalyse ueber alle Daten, 5 Cluster ---\n");
+        System.out.println(dt.findCluster(alleDaten, 5));
 
-		// Eigenen Dateipfad eintragen, nicht meinen nehmen ;-)
- 		String path = "/home/falk/Downloads/";
-		String roh = path + "kd.csv";
-		String arffDat = path + "kd.arff";
+        // Waren rausnehmen, nur Kundendaten stehen lassen
+        nurKunden = new Instances(alleDaten);
+        for (int i = 0; i < 16; i++) {
+            nurKunden.deleteAttributeAt(10); // einzelnes Attribut rausnehmen
+        }
 
-		Instances alleDaten, nurWaren, nurKunden, arffDaten;
+        // Clusteranalyse mit 3 Clustern ueber die Kundendaten
+        System.out.println(">>>>>--- Clusteranalyse ueber die Kundendaten, 3 Cluster ---\n");
+        System.out.println(dt.findCluster(nurKunden, 3));
 
-		WekaBspStud dt = new WekaBspStud();
+        // Kundendaten rausnehmen, nur Warenkoerbe stehen lassen
+        nurWaren = new Instances(alleDaten);
+        for (int i = 0; i < 11; i++) {
+            nurWaren.deleteAttributeAt(0); // ein einzelnes Attribut rausnehmen
+        }
 
-		// CSV-Datei laden
-		CSVLoader loader = new CSVLoader();
-		loader.setSource(new File(roh));
-		alleDaten = loader.getDataSet();
+        // Assoziationsanalyse der gekauften Waren
+        System.out.println(">>>>>--- Apriori-Analyse (Waren die zusammen gekauft wurden) ---\n");
+        String[] aprioriResult = dt.makeApriori(nurWaren);
+        for (int i = 0; i < aprioriResult.length; i++) {
+            System.out.println(aprioriResult[i]);
+        }
 
-		// 0 durch ? ersetzen, um fuer die Auswertung nur die Waren zu
-		// beruecksichtigen, die gekauft wurden
-		NumericCleaner nc = new NumericCleaner();
-		nc.setMinThreshold(1.0); // Schwellwert auf 1 setzen
-		nc.setMinDefault(Double.NaN); // alles unter 1 durch ? ersetzen
-		nc.setInputFormat(alleDaten);
-		alleDaten = Filter.useFilter(alleDaten, nc); // Filter anwenden
+        // Verteilung der einzelnen Attribute Kundendaten und Einkaufsverhalten
+        System.out.println("\n>>>>>--- Verteilung der einzelnen Attribute (absolute Zahlen) ---\n");
 
-		/*
-		 * ARFF - Format der Daten fuer Weka erzeugen Das ist zwar komisch (erst
-		 * speichern und dann wieder einlesen), geht sicher auch anders. Drueber
-		 * nachdenken .. irgendwann ;-)
-		 */
-		// als ARFF speichern
-		ArffSaver saver = new ArffSaver();
-		saver.setInstances(alleDaten);
-		saver.setFile(new File(arffDat));
-		saver.writeBatch();
+        for (int i = 0; i <= 9; i++) {
+            System.out.println(dt.attDistributionAbsolute(nurKunden, i));
+        }
 
-		// Arff-Datei laden
-		ArffLoader aLoader = new ArffLoader();
-		aLoader.setSource(new File(arffDat));
-		arffDaten = aLoader.getDataSet();
+    }
 
-		/*
-		 * ******************* Start der Auswertungen ***********************
-		 */
+    /**
+     * ermittelt die angegebene Anzahl der Cluster
+     *
+     * @param daten  alleDaten, nurKunden, nurWaren - je nach Analyse
+     * @param number Anzahl der Cluster, die ermittelt werden sollen
+     * @return Die einzelnen Cluster in einem String, getrennt durch \n
+     * @throws Exception Fehlerbehandlung muss noch erledigt werden
+     */
+    public String findCluster(Instances daten, int number) throws Exception {
+        String[] result;
 
-		// Top-Werte ermitteln
-		System.out.println(">>>>>--- Top-Wert ermitteln ----\n");
-		System.out.println("Haeufigste Altersgruppe: " + dt.findMaximum(arffDaten, 1) + " Jahre\n");
+        SimpleKMeans model = new SimpleKMeans();
+        model.setNumClusters(number);
 
+        model.buildClusterer(daten);
 
-		// Clusteranalyse mit 5 Clustern ueber alle Daten
-		System.out.println(">>>>>--- Clusteranalyse ueber alle Daten, 5 Cluster ---\n");
-		System.out.println(dt.findCluster(alleDaten, 5));
+        // Final cluster centroids holen
+        result = model.getClusterCentroids().toString().split("@data\n");
+        return (result[1] + "\n");
+    }
 
-		// Waren rausnehmen, nur Kundendaten stehen lassen
-		nurKunden = new Instances(alleDaten);
-		for (int i = 0; i < 16; i++) {
-			nurKunden.deleteAttributeAt(10); // einzelnes Attribut rausnehmen
-		}
+    // Hilfsmethode, um fuer die Auswertung unnoetige Angaben rauszuloeschen
+    private String clearAprioriList(String oneRule) {
+        String temp = "";
 
-		// Clusteranalyse mit 3 Clustern ueber die Kundendaten
-		System.out.println(">>>>>--- Clusteranalyse ueber die Kundendaten, 3 Cluster ---\n");
-		System.out.println(dt.findCluster(nurKunden, 3));
+        // Weka-blabla raus loeschen
+        for (int i = 0; i < oneRule.length(); i++) {
+            Character a = oneRule.charAt(i);
+            if ((Character.isLetter(a)) || (a == ',')) {
+                temp = temp + a;
+            }
+        }
+        return temp;
+    }
 
-		// Kundendaten rausnehmen, nur Warenkoerbe stehen lassen
-		nurWaren = new Instances(alleDaten);
-		for (int i = 0; i < 11; i++) {
-			nurWaren.deleteAttributeAt(0); // ein einzelnes Attribut rausnehmen
-		}
+    /**
+     * Ermittelt aus den Kundendaten die Warengruppen, die haeufig zusammen gekauft
+     * werden Die Regeln werden ueber den Apriori-Algorithmus ermittelt
+     *
+     * @param daten nurWaren - fuer die Analyse, der zusammen gekauften Waren <br>
+     *              je nach Analyse auch alleDaten oder nurKunden als daten
+     * @return Waren, die zusammen gekauft werden, als Stringarray, dessen Dimension
+     * sich aus der Anzahl der gefundenen Regeln ergibt
+     * @throws Exception Fehlerbehandlung muss noch erledigt werden
+     */
+    public String[] makeApriori(Instances daten) throws Exception {
 
-		// Assoziationsanalyse der gekauften Waren
-		System.out.println(">>>>>--- Apriori-Analyse (Waren die zusammen gekauft wurden) ---\n");
-		String[] aprioriResult = dt.makeApriori(nurWaren);
-		for (int i = 0; i < aprioriResult.length; i++) {
-			System.out.println(aprioriResult[i]);
-		}
-		
-		// Verteilung der einzelnen Attribute Kundendaten und Einkaufsverhalten
-		System.out.println("\n>>>>>--- Verteilung der einzelnen Attribute (absolute Zahlen) ---\n");
+        // umwandeln in gekauft / nicht gekauft (0/1)
+        NumericCleaner nc = new NumericCleaner();
+        nc.setMaxThreshold(1.0); // Schwellwert auf 1 setzen
+        nc.setMaxDefault(1.0); // alles ueber Schwellwert durch 1 ersetzen
+        nc.setInputFormat(daten);
+        daten = Filter.useFilter(daten, nc); // Filter anwenden.
 
-		for (int i = 0; i <= 9; i++) {
-			System.out.println(dt.attDistributionAbsolute(nurKunden, i));
-		}
+        // Die Daten als nominale und nicht als numerische Daten setzen
+        NumericToNominal num2nom = new NumericToNominal();
+        num2nom.setAttributeIndices("first-last");
+        num2nom.setInputFormat(daten);
+        daten = Filter.useFilter(daten, num2nom);
 
-	}
+        Apriori model = new Apriori();
+        model.buildAssociations(daten);
+
+        List<AssociationRule> rulesA = model.getAssociationRules().getRules();
+        int anzRules = rulesA.size();
+
+        String[] tmp = new String[anzRules];
+
+        // Ergebnis huebsch zusammensetzen
+        for (int i = 0; i < anzRules; i++) {
+            tmp[i] = clearAprioriList(rulesA.get(i).getPremise().toString()) + " ==> "
+                    + clearAprioriList(rulesA.get(i).getConsequence().toString());
+        }
+        return tmp;
+    }
+
+    /**
+     * liefert den haeufigsten Wert eines Attributs zurueck benutzt ZeroR, eine
+     * Wekafunktion fuer das haeufigste Element der nominalen Attribute, bei
+     * numerischen Werten wird der Mittelwert geliefert!
+     *
+     * @param daten Hier wichtig: Daten im <b>arffFormat!</b>
+     * @param index - Fuer welches Attribut soll das Maximum bestimmt werden (0..9
+     *              hier sinnvoll, da nur diese Daten nominal sind)
+     * @return haeufigstes Element als String
+     * @throws Exception Fehlerbehandlung muss noch erledigt werden
+     */
+    public String findMaximum(Instances daten, int index) throws Exception {
+        String[] max;
+
+        ZeroR za = new ZeroR(); // wekafunktion
+
+        daten.setClass(daten.attribute(index)); // Attribut dessen Maximum
+        // ermittelt werden soll
+        za.buildClassifier(daten);
+
+        max = za.toString().split(": "); // weka -blabla wegnehmen
+
+        return (max[1]);
+    }
+
+    /**
+     * Verteilung der einzelnen Attribute Kundendaten und Einkaufsverhalten, als
+     * <b>absolute</b> Werte
+     *
+     * @param daten - alleDaten
+     * @param index - welches Attribut soll ausgewertet werden?
+     * @return Verteilung des Attributs
+     */
+    public String attDistributionAbsolute(Instances daten, int index) {
+        int attCount, attNum = index;
+        String result;
+
+        result = daten.attribute(attNum).name() + ": ";
+
+        // Anzahl der moeglichen Werte
+        attCount = daten.attributeStats(attNum).distinctCount;
+
+        for (int i = 0; i < attCount; i++) {
+            result += "\"" + daten.attribute(attNum).value(i) + "\"" + " = "
+                    + daten.attributeStats(attNum).nominalCounts[i] + "  ";
+        }
+
+        return result;
+    }
 }
