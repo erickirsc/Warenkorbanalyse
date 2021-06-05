@@ -73,10 +73,28 @@
                                             <a class="btn bg-blue">
                                                 <i class="ion-edit"></i>
                                             </a>
-                                            <a class="btn bg-danger"
-                                               th:href="@{/marketing-measures/delete/{id}(id=${measure.id})}">
+                                            <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                    th:data-target="${'#deleteModal-' + measure.id}">
                                                 <i class="ion-trash-a"></i>
-                                            </a>
+                                            </button>
+                                            <div class="modal fade" th:id="${'deleteModal-' + measure.id}" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Löschen</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Diese Maßnahme wirklich löschen?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                                Abbrechen
+                                                            </button>
+                                                            <a class="btn btn-danger" th:href="@{/marketing-measures/delete/{id}(id=${measure.id})}">Löschen</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -85,9 +103,6 @@
                             <!-- /.box-body -->
                         </div>
                     </div>
-                </div>
-                <div class="row justify-content-center">
-
                 </div>
             </div>
         </div>
