@@ -4,6 +4,7 @@ import hsel.softsmart.warenkorbanalyse.model.MarketingMeasure;
 import hsel.softsmart.warenkorbanalyse.repository.MarketingMeasureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,5 +26,11 @@ public class MarketingMeasuresServiceImplementation implements MarketingMeasures
     @Override
     public void deleteMarketingMeasure(long id) {
         marketingMeasureRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void updateMarketingMeasure(long id, String measure) {
+        marketingMeasureRepository.updateMarketingMeasureById(id, measure);
     }
 }

@@ -5,9 +5,7 @@ import hsel.softsmart.warenkorbanalyse.service.MarketingMeasuresService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,6 +30,12 @@ public class MarketingMeasuresController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable long id) {
         marketingMeasuresService.deleteMarketingMeasure(id);
+        return "redirect:/marketing-measures";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String edit(@PathVariable long id, @ModelAttribute MarketingMeasure marketingMeasure) {
+        marketingMeasuresService.updateMarketingMeasure(id, marketingMeasure.getMeasure());
         return "redirect:/marketing-measures";
     }
 }

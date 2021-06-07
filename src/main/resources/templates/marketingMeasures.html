@@ -70,9 +70,31 @@
                                     <tr th:each="measure: ${marketingMeasures}">
                                         <td th:text="${measure.measure}">Maßnahme</td>
                                         <td>
-                                            <a class="btn bg-blue">
+                                            <!-- Edit Button -->
+                                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                    th:data-target="${'#editModal-' + measure.id}">
                                                 <i class="ion-edit"></i>
-                                            </a>
+                                            </button>
+                                            <div class="modal fade" th:id="${'editModal-' + measure.id}" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog" role="document">
+                                                    <form method="post" th:action="@{/marketing-measures/edit/{id}(id=${measure.id})}" th:object="${measure}" class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Marketingmaßnahme bearbeiten</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <label for="measureTextarea" th:for="*{'measureTextarea-' + id}"></label>
+                                                            <textarea class="form-control" id="measureTextarea" th:id="*{'measureTextarea-' + id}" th:text="*{measure}" name="measure"></textarea>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                                Abbrechen
+                                                            </button>
+                                                            <button type="submit" class="btn btn-primary">Speichern</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <!-- Delete Button -->
                                             <button type="button" class="btn btn-danger" data-toggle="modal"
                                                     th:data-target="${'#deleteModal-' + measure.id}">
                                                 <i class="ion-trash-a"></i>

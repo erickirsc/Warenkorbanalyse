@@ -8,4 +8,6 @@ public interface MarketingMeasuresService {
     List<MarketingMeasure> getAllMarketingMeasures();
 
     void deleteMarketingMeasure(long id);
+
+    void updateMarketingMeasure(long id, String measure);
 }

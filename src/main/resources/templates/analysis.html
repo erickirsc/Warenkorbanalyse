@@ -62,12 +62,13 @@
                                 <i class="ion-upload"></i> Kundendaten hochladen
                             </button>
                             <!-- Modal -->
-                            <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog"
-                                 aria-labelledby="uploadModalLabel">
+                            <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog">
                                 <div class="modal-dialog" role="document">
                                     <form method="post" th:action="@{/analysis/upload}" id="csvUpload" class="modal-content" enctype="multipart/form-data">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Kundendaten auswählen</h5>
+                                        </div>
                                         <div class="modal-body">
-                                            <h4>Kundendaten auswählen</h4>
                                             <input type="file" name="file" accept="text/csv, .csv" class="form-control" id="customFile"/>
                                         </div>
                                         <div class="modal-footer">
@@ -102,7 +103,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="info-box">
-                            <span class="info-box-icon bg-green"><i class="ion ion-arrow-graph-up-right"></i></span>
+                            <span class="info-box-icon bg-red"><i class="ion ion-arrow-graph-up-right"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Umsatzstärkstes Produkt</span>
                                 <span th:text="${topProduct}" class="info-box-number">Lindt Schokolade 250g</span>
@@ -111,7 +112,7 @@
                     </div>
                     <div class="col">
                         <div class="info-box">
-                            <span class="info-box-icon bg-red"><i class="ion ion-arrow-graph-down-right"></i></span>
+                            <span class="info-box-icon bg-green"><i class="ion ion-arrow-graph-down-right"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Umsatzschwächstes Produkt</span>
                                 <span th:text="${flopProduct}" class="info-box-number">Tymbark Kirsche</span>
@@ -146,7 +147,7 @@
                         <div class="box mt-3">
                             <!-- /.box-header -->
                             <div class="box-body no-padding">
-                                <div class="card-body table-responsive p-0" style="height: 300px;">
+                                <div class="card-body table-responsive p-0" style="height: 31vh;">
                                     <table class="table table-head-fixed table-condensed text-nowrap">
                                         <thead>
                                         <tr>
