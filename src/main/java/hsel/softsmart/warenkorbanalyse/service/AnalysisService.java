@@ -4,6 +4,7 @@ import hsel.softsmart.warenkorbanalyse.model.Result;
 import weka.core.Instances;
 
 import java.io.File;
+import java.util.List;
 
 public interface AnalysisService {
     Instances loadCSVData(File file);
@@ -15,4 +16,8 @@ public interface AnalysisService {
     void saveResult(Result result);
 
     Result findLastResult();
+
+    List<Result> resultHistory();
+
+    Result findResultById(Long id);
 }

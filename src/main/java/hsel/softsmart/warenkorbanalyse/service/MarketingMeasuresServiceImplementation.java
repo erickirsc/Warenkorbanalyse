@@ -33,4 +33,9 @@ public class MarketingMeasuresServiceImplementation implements MarketingMeasures
     public void updateMarketingMeasure(long id, String measure) {
         marketingMeasureRepository.updateMarketingMeasureById(id, measure);
     }
+
+    @Override
+    public void saveMarketingMeasure(MarketingMeasure marketingMeasure) {
+        marketingMeasureRepository.save(marketingMeasure);
+    }
 }

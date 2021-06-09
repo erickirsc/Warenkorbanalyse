@@ -5,7 +5,9 @@ import hsel.softsmart.warenkorbanalyse.repository.ResultRepository;
 import hsel.softsmart.warenkorbanalyse.weka.WekaBspStud;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
 import weka.core.converters.ArffSaver;
@@ -14,6 +16,9 @@ import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NumericCleaner;
 
 import java.io.File;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AnalysisServiceImplementation implements AnalysisService {
@@ -75,6 +80,7 @@ public class AnalysisServiceImplementation implements AnalysisService {
         result.setTopTime(topTime);
         result.setTopProduct(topProduct);
         result.setFlopProduct(flopProduct);
+        result.setDate(new Date());
 
         for (String apriori : aprioris) {
             String[] split = apriori.split("==>");
@@ -85,13 +91,28 @@ public class AnalysisServiceImplementation implements AnalysisService {
     }
 
     @Override
+    @Transactional
     public void saveResult(Result result) {
+        if (resultRepository.count() >= 5) {
+            Optional<Result> oldestResult = resultRepository.findTopByOrderById();
+            oldestResult.ifPresent(resultRepository::delete);
+        }
         resultRepository.save(result);
     }
 
     @Override
     public Result findLastResult() {
         return resultRepository.findTopByOrderByIdDesc().orElse(new Result());
+    }
+
+    @Override
+    public Result findResultById(Long id) {
+        return resultRepository.findById(id).orElse(new Result());
+    }
+
+    @Override
+    public List<Result> resultHistory() {
+        return resultRepository.findAll();
     }
 
     @SneakyThrows

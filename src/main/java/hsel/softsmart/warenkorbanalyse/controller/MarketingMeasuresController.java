@@ -38,4 +38,10 @@ public class MarketingMeasuresController {
         marketingMeasuresService.updateMarketingMeasure(id, marketingMeasure.getMeasure());
         return "redirect:/marketing-measures";
     }
+
+    @PostMapping("/save")
+    public String save(@ModelAttribute MarketingMeasure marketingMeasure) {
+        marketingMeasuresService.saveMarketingMeasure(marketingMeasure);
+        return "redirect:/marketing-measures";
+    }
 }

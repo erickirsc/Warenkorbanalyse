@@ -39,26 +39,39 @@
 <body class="hold-transition">
 <div class="wrapper">
     <aside th:replace="fragments/sidebar.html :: sidebar">SIDEBAR FRAGMENT</aside>
-
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
         <div class="content-header mb-5">
             <div class="container-fluid">
                 <h1>Marketingmaßnahmen</h1>
             </div>
         </div>
-
-        <!-- Main content -->
         <div class="content">
             <div class="container-fluid">
                 <div class="row mt-5">
                     <div class="col mb-3">
-                        Marketingmaßnahmen <a class="btn btn-outline-success btn-social btn-bitbucket">
-                        <i class="ion-plus-round"></i>
-                    </a>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addMeasureModal">
+                            <i class="ion-plus-round"></i> Hinzufügen
+                        </button>
+                        <div class="modal fade" id="addMeasureModal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <form method="post" th:action="@{/marketing-measures/save}" class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Marketingmaßnahme hinzufügen</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label for="measureSaveTextarea"></label>
+                                        <textarea class="form-control" id="measureSaveTextarea" name="measure"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                                            Abbrechen
+                                        </button>
+                                        <button type="submit" class="btn btn-success">Hinzufügen</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                         <div class="box mt-3">
-                            <!-- /.box-header -->
                             <div class="box-body no-padding">
                                 <table class="table table-condensed">
                                     <thead>
@@ -68,9 +81,9 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="measure: ${marketingMeasures}">
-                                        <td th:text="${measure.measure}">Maßnahme</td>
+                                        <td th:text="${measure.measure}" class="w-75 text-wrap">Maßnahme</td>
                                         <td>
-                                            <!-- Edit Button -->
+                                            <!-- Edit Section -->
                                             <button type="button" class="btn btn-primary" data-toggle="modal"
                                                     th:data-target="${'#editModal-' + measure.id}">
                                                 <i class="ion-edit"></i>
@@ -82,8 +95,8 @@
                                                             <h5 class="modal-title">Marketingmaßnahme bearbeiten</h5>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <label for="measureTextarea" th:for="*{'measureTextarea-' + id}"></label>
-                                                            <textarea class="form-control" id="measureTextarea" th:id="*{'measureTextarea-' + id}" th:text="*{measure}" name="measure"></textarea>
+                                                            <label for="measureEditTextarea" th:for="*{'measureEditTextarea-' + id}"></label>
+                                                            <textarea class="form-control" id="measureEditTextarea" th:id="*{'measureEditTextarea-' + id}" th:text="*{measure}" name="measure"></textarea>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -94,7 +107,8 @@
                                                     </form>
                                                 </div>
                                             </div>
-                                            <!-- Delete Button -->
+                                            <!-- Edit Section : End -->
+                                            <!-- Delete Section -->
                                             <button type="button" class="btn btn-danger" data-toggle="modal"
                                                     th:data-target="${'#deleteModal-' + measure.id}">
                                                 <i class="ion-trash-a"></i>
@@ -117,12 +131,12 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- Delete Section : End -->
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <!-- /.box-body -->
                         </div>
                     </div>
                 </div>

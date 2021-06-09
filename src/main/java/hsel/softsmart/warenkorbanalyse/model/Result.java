@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -17,10 +18,12 @@ public class Result {
     private String flopProduct;
     private String topDay;
     private String topTime;
+    private Date date;
 
     @OneToMany(
             mappedBy = "result",
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
     private List<AprioriValue> aprioriValues = new ArrayList<>();
 

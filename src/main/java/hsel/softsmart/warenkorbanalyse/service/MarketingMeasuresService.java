@@ -10,4 +10,6 @@ public interface MarketingMeasuresService {
     void deleteMarketingMeasure(long id);
 
     void updateMarketingMeasure(long id, String measure);
+
+    void saveMarketingMeasure(MarketingMeasure marketingMeasure);
 }

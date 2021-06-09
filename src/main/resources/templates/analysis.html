@@ -45,7 +45,7 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        <div class="content-header mb-5">
+        <div class="content-header mb-4">
             <div class="container-fluid">
                 <h1>Auswertung</h1>
             </div>
@@ -69,7 +69,7 @@
                                             <h5 class="modal-title">Kundendaten auswählen</h5>
                                         </div>
                                         <div class="modal-body">
-                                            <input type="file" name="file" accept="text/csv, .csv" class="form-control" id="customFile"/>
+                                            <input type="file" name="file" accept="text/csv, .csv" class="form-control" id="customFile" required/>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -82,20 +82,17 @@
                                     </form>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-default dropdown-toggle dropdown-icon"
+                            <button th:disabled="${resultHistory.size == 0}" type="button" class="btn btn-default dropdown-toggle dropdown-icon"
                                     data-toggle="dropdown">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
-                            <div class="dropdown-menu" role="menu">
-                                <a class="dropdown-item" href="#">Datensatz 1</a>
-                                <a class="dropdown-item" href="#">Datensatz 2</a>
-                                <a class="dropdown-item" href="#">Datensatz 3</a>
-                                <a class="dropdown-item" href="#">Datensatz 4</a>
-                                <a class="dropdown-item" href="#">Datensatz 5</a>
-                            </div>
+                            <form th:action="@{/analysis}" method="post" class="dropdown-menu">
+                                <button th:each="oldResult: ${resultHistory}" type="submit" class="dropdown-item" th:text="${#dates.format(oldResult.date, 'dd.MM.yyyy - HH:mm:ss')}" th:value="${oldResult.id}" name="id">Datensatz</button>
+                            </form>
                         </div>
-                        <div class="d-block mt-5">
+                        <div class="d-block mt-4">
                             <h5>Ergebnisse</h5>
+                            <p class="text-secondary" th:text="${#dates.format(result.date, 'dd.MM.yyyy - HH:mm:ss')}"></p>
                         </div>
                         <hr>
                     </div>
@@ -106,7 +103,7 @@
                             <span class="info-box-icon bg-red"><i class="ion ion-arrow-graph-up-right"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Umsatzstärkstes Produkt</span>
-                                <span th:text="${topProduct}" class="info-box-number">Lindt Schokolade 250g</span>
+                                <span th:text="${result.topProduct}" class="info-box-number">Lindt Schokolade 250g</span>
                             </div>
                         </div>
                     </div>
@@ -115,7 +112,7 @@
                             <span class="info-box-icon bg-green"><i class="ion ion-arrow-graph-down-right"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Umsatzschwächstes Produkt</span>
-                                <span th:text="${flopProduct}" class="info-box-number">Tymbark Kirsche</span>
+                                <span th:text="${result.flopProduct}" class="info-box-number">Tymbark Kirsche</span>
                             </div>
                         </div>
                     </div>
@@ -126,7 +123,7 @@
                             <span class="info-box-icon bg-blue"><i class="ion ion-calendar"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Umsatzstärkster Einkaufstag der Woche</span>
-                                <span th:text="${topDay}" class="info-box-number">Mittwoch</span>
+                                <span th:text="${result.topDay}" class="info-box-number">Mittwoch</span>
                             </div>
                         </div>
                     </div>
@@ -135,7 +132,7 @@
                             <span class="info-box-icon bg-blue"><i class="ion ion-clock"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Umsatzstärkste Einkaufsuhrzeit der Woche</span>
-                                <span th:text="${topTime}" class="info-box-number">13:00</span>
+                                <span th:text="${result.topTime}" class="info-box-number">13:00</span>
                             </div>
                         </div>
                     </div>
@@ -147,7 +144,7 @@
                         <div class="box mt-3">
                             <!-- /.box-header -->
                             <div class="box-body no-padding">
-                                <div class="card-body table-responsive p-0" style="height: 31vh;">
+                                <div class="card-body table-responsive p-0" style="height: 33vh;">
                                     <table class="table table-head-fixed table-condensed text-nowrap">
                                         <thead>
                                         <tr>
@@ -156,7 +153,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="pos: ${aprioriValues}">
+                                        <tr th:each="pos: ${result.aprioriValues}">
                                             <td th:text="${pos.product}">Backwaren</td>
                                             <td th:text="${pos.boughtTogetherWith}">Tiernahrung, KaffeeRee</td>
                                         </tr>

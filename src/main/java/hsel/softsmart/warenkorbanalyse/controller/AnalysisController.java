@@ -15,6 +15,7 @@ import weka.core.Instances;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/analysis")
@@ -30,12 +31,21 @@ public class AnalysisController {
     @GetMapping
     public String index(Model model) {
         Result result = analysisService.findLastResult();
+        List<Result> resultHistory = analysisService.resultHistory();
 
-        model.addAttribute("topDay", result.getTopDay());
-        model.addAttribute("topTime", result.getTopTime());
-        model.addAttribute("topProduct", result.getTopProduct());
-        model.addAttribute("flopProduct", result.getFlopProduct());
-        model.addAttribute("aprioriValues", result.getAprioriValues());
+        model.addAttribute("result", result);
+        model.addAttribute("resultHistory", resultHistory);
+
+        return "analysis";
+    }
+
+    @PostMapping
+    public String olderResult(@RequestParam("id") Long id, Model model) {
+        Result result = analysisService.findResultById(id);
+        List<Result> resultHistory = analysisService.resultHistory();
+
+        model.addAttribute("result", result);
+        model.addAttribute("resultHistory", resultHistory);
 
         return "analysis";
     }
