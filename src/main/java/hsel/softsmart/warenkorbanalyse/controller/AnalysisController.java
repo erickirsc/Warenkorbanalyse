@@ -1,7 +1,11 @@
 package hsel.softsmart.warenkorbanalyse.controller;
 
+import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import hsel.softsmart.warenkorbanalyse.model.AprioriValue;
 import hsel.softsmart.warenkorbanalyse.model.AssociatedProduct;
+import hsel.softsmart.warenkorbanalyse.model.CustomerCsvEntry;
 import hsel.softsmart.warenkorbanalyse.model.Result;
 import hsel.softsmart.warenkorbanalyse.service.AnalysisService;
 import hsel.softsmart.warenkorbanalyse.util.FileUtil;
@@ -16,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import weka.core.Instances;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -84,9 +89,20 @@ public class AnalysisController {
         Instances csvData = analysisService.loadCSVData(csvFile);
         Instances arffData = analysisService.loadArffData(csvData);
 
-        csvFile.delete();
+        CSVReader csvReader = new CSVReader(new FileReader(csvFile));
 
-        Result result = analysisService.processData(csvData, arffData);
+        HeaderColumnNameMappingStrategy<CustomerCsvEntry> mappingStrategy = new HeaderColumnNameMappingStrategy<>();
+        mappingStrategy.setType(CustomerCsvEntry.class);
+
+        CsvToBean<CustomerCsvEntry> csvToBean = new CsvToBean<>();
+        csvToBean.setCsvReader(csvReader);
+        csvToBean.setMappingStrategy(mappingStrategy);
+
+        List<CustomerCsvEntry> csvEntries = csvToBean.parse();
+
+        Result result = analysisService.processData(csvEntries, csvData, arffData);
+
+        csvFile.delete();
 
         analysisService.saveResult(result);
 

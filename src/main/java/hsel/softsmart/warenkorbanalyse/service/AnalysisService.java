@@ -1,5 +1,6 @@
 package hsel.softsmart.warenkorbanalyse.service;
 
+import hsel.softsmart.warenkorbanalyse.model.CustomerCsvEntry;
 import hsel.softsmart.warenkorbanalyse.model.Result;
 import weka.core.Instances;
 
@@ -11,7 +12,7 @@ public interface AnalysisService {
 
     Instances loadArffData(Instances csvData);
 
-    Result processData(Instances csvData, Instances arffData);
+    Result processData(List<CustomerCsvEntry> csvEntries, Instances csvData, Instances arffData);
 
     void saveResult(Result result);
 

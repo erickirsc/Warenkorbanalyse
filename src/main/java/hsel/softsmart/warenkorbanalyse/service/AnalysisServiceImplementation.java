@@ -1,5 +1,6 @@
 package hsel.softsmart.warenkorbanalyse.service;
 
+import hsel.softsmart.warenkorbanalyse.model.CustomerCsvEntry;
 import hsel.softsmart.warenkorbanalyse.model.Result;
 import hsel.softsmart.warenkorbanalyse.repository.ResultRepository;
 import hsel.softsmart.warenkorbanalyse.weka.WekaBspStud;
@@ -65,12 +66,12 @@ public class AnalysisServiceImplementation implements AnalysisService {
 
     @SneakyThrows
     @Override
-    public Result processData(Instances csvData, Instances arffData) {
+    public Result processData(List<CustomerCsvEntry> csvEntries, Instances csvData, Instances arffData) {
         String topDay = weka.findMaximum(arffData, 5);
         String topTime = weka.findMaximum(arffData, 6);
         String[] aprioris = weka.makeApriori(productData(csvData));
-        String topProduct = "Bier";
-        String flopProduct = "Konserven";
+        String topProduct = topProductBySales(csvEntries);
+        String flopProduct = flopProductBySales(csvEntries);
 
         Result result = new Result();
         result.setTopDay(topDay);
@@ -83,7 +84,7 @@ public class AnalysisServiceImplementation implements AnalysisService {
         for (String apriori : aprioris) {
             String[] split = apriori.split("==>");
             String product = split[1].trim();
-            String[] boughtTogetherWith= split[0].replace(" ", "").split(",");
+            String[] boughtTogetherWith = split[0].replace(" ", "").split(",");
 
             if (aprioriPositions.containsKey(product)) {
                 aprioriPositions.get(product).addAll(Arrays.asList(boughtTogetherWith));
@@ -142,5 +143,141 @@ public class AnalysisServiceImplementation implements AnalysisService {
         }
 
         return productData;
+    }
+
+    private String topProductBySales(List<CustomerCsvEntry> csvEntries) {
+        Map<String, Integer> totalOfProductSales = totalOfProductSales(csvEntries);
+        return Collections.max(totalOfProductSales.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
+    }
+
+    private String flopProductBySales(List<CustomerCsvEntry> csvEntries) {
+        Map<String, Integer> totalOfProductSales = totalOfProductSales(csvEntries);
+        return Collections.min(totalOfProductSales.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
+    }
+
+    private Map<String, Integer> totalOfProductSales(List<CustomerCsvEntry> csvEntries) {
+        Map<String, Integer> results = new HashMap<>();
+
+        results.put(
+                "Fertiggerichte",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getReadyMeal)
+                        .sum()
+        );
+
+        results.put(
+                "Tiefkuehlware",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getFrozenGoods)
+                        .sum()
+        );
+
+        results.put(
+                "Milchprodukte",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getMilkProducts)
+                        .sum()
+        );
+
+        results.put(
+                "Backwaren",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getBakeryProducts)
+                        .sum()
+        );
+
+        results.put(
+                "ObstGemuese",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getFruitAndVegetables)
+                        .sum()
+        );
+
+        results.put(
+                "Spirituosen",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getSpirits)
+                        .sum()
+        );
+
+        results.put(
+                "Tiernahrung",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getPetFood)
+                        .sum()
+        );
+
+        results.put(
+                "Bier",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getBeer)
+                        .sum()
+        );
+
+        results.put(
+                "Frischfleisch",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getFreshMeat)
+                        .sum()
+        );
+
+        results.put(
+                "Drogerieartikel",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getDrugstoreItems)
+                        .sum()
+        );
+
+        results.put(
+                "Konserven",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getCannedGoods)
+                        .sum()
+        );
+
+        results.put(
+                "KaffeeTee",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getCoffeeAndTea)
+                        .sum()
+        );
+
+        results.put(
+                "Suessigkeiten",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getSweets)
+                        .sum()
+        );
+
+        results.put(
+                "Wurstwaren",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getSausages)
+                        .sum()
+        );
+
+        results.put(
+                "Schreibwaren",
+                csvEntries
+                        .stream()
+                        .mapToInt(CustomerCsvEntry::getStationery)
+                        .sum()
+        );
+
+        return results;
     }
 }
