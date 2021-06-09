@@ -32,14 +32,14 @@
 <body>
 <aside th:fragment="sidebar" class="main-sidebar sidebar-wrapper sidebar-dark-primary elevation-4 fixed">
     <!-- Brand Logo -->
-    <a class="brand-link" th:href="@{/}">
+    <a class="brand-link border-bottom-0" th:href="@{/}">
         <img src="../../static/img/kaufdortlogo.svg" th:src="@{/img/kaufdortlogo.svg}" alt="Logo">
     </a>
 
     <!-- Sidebar Menu -->
     <nav class="mt-2">
         <ul class="nav nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li class="nav-header">Navigation</li>
+            <li class="nav-header mt-2">Navigation</li>
             <li class="nav-item">
                 <a th:href="@{/analysis}" class="nav-link text-white" role="button">
                     <i class="nav-icon fas fa-columns"></i>
@@ -52,10 +52,10 @@
                     <p>Marketingmaßnahmen</p>
                 </a>
             </li>
-            <li class="nav-item position-fixed w-100 bottom-0">
-                <a th:href="@{/settings}" class="nav-link text-white" role="button">
-                    <i class="nav-icon fas fa-cog"></i>
-                    <p>Einstellungen</p>
+            <li style="bottom: 0; position: fixed; width: 250px" class="nav-item">
+                <a th:href="@{/logout}" class="nav-link text-white" role="button">
+                    <i class="nav-icon fas fa-lock"></i>
+                    <p>Abmelden</p>
                 </a>
             </li>
         </ul>
