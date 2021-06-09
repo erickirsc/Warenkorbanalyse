@@ -5,7 +5,6 @@ import hsel.softsmart.warenkorbanalyse.repository.ResultRepository;
 import hsel.softsmart.warenkorbanalyse.weka.WekaBspStud;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weka.core.Instances;
@@ -16,9 +15,7 @@ import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NumericCleaner;
 
 import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AnalysisServiceImplementation implements AnalysisService {
@@ -82,9 +79,21 @@ public class AnalysisServiceImplementation implements AnalysisService {
         result.setFlopProduct(flopProduct);
         result.setDate(new Date());
 
+        Map<String, Set<String>> aprioriPositions = new HashMap<>();
         for (String apriori : aprioris) {
             String[] split = apriori.split("==>");
-            result.addAprioriValue(split[1].trim(), split[0].trim());
+            String product = split[1].trim();
+            String[] boughtTogetherWith= split[0].replace(" ", "").split(",");
+
+            if (aprioriPositions.containsKey(product)) {
+                aprioriPositions.get(product).addAll(Arrays.asList(boughtTogetherWith));
+            } else {
+                aprioriPositions.put(product, new HashSet<>(Arrays.asList(boughtTogetherWith)));
+            }
+        }
+
+        for (Map.Entry<String, Set<String>> aprioriPosition : aprioriPositions.entrySet()) {
+            result.addAprioriValue(aprioriPosition.getKey(), aprioriPosition.getValue());
         }
 
         return result;

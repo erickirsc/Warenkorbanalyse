@@ -1,5 +1,7 @@
 package hsel.softsmart.warenkorbanalyse.controller;
 
+import hsel.softsmart.warenkorbanalyse.model.AprioriValue;
+import hsel.softsmart.warenkorbanalyse.model.AssociatedProduct;
 import hsel.softsmart.warenkorbanalyse.model.Result;
 import hsel.softsmart.warenkorbanalyse.service.AnalysisService;
 import hsel.softsmart.warenkorbanalyse.util.FileUtil;
@@ -15,7 +17,10 @@ import weka.core.Instances;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/analysis")
@@ -36,6 +41,17 @@ public class AnalysisController {
         model.addAttribute("result", result);
         model.addAttribute("resultHistory", resultHistory);
 
+        Map<String, List<String>> aprioriPositions = new HashMap<>();
+        for (AprioriValue aprioriValue : result.getAprioriValues()) {
+            List<String> associatedProducts = new LinkedList<>();
+            for (AssociatedProduct associatedProduct : aprioriValue.getAssociatedProducts()) {
+                associatedProducts.add(associatedProduct.getAssociatedProduct());
+            }
+            aprioriPositions.put(aprioriValue.getProduct(), associatedProducts);
+        }
+
+        model.addAttribute("aprioriPositions", aprioriPositions);
+
         return "analysis";
     }
 
@@ -46,6 +62,17 @@ public class AnalysisController {
 
         model.addAttribute("result", result);
         model.addAttribute("resultHistory", resultHistory);
+
+        Map<String, List<String>> aprioriPositions = new HashMap<>();
+        for (AprioriValue aprioriValue : result.getAprioriValues()) {
+            List<String> associatedProducts = new LinkedList<>();
+            for (AssociatedProduct associatedProduct : aprioriValue.getAssociatedProducts()) {
+                associatedProducts.add(associatedProduct.getAssociatedProduct());
+            }
+            aprioriPositions.put(aprioriValue.getProduct(), associatedProducts);
+        }
+
+        model.addAttribute("aprioriPositions", aprioriPositions);
 
         return "analysis";
     }

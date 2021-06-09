@@ -153,9 +153,9 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="pos: ${result.aprioriValues}">
-                                            <td th:text="${pos.product}">Backwaren</td>
-                                            <td th:text="${pos.boughtTogetherWith}">Tiernahrung, KaffeeRee</td>
+                                        <tr th:each="position: ${aprioriPositions}">
+                                            <td th:text="${position.key}">Backwaren</td>
+                                            <td th:text="${#strings.listJoin(position.value, ', ')}">Tiernahrung, KaffeeTee</td>
                                         </tr>
                                         </tbody>
                                     </table>

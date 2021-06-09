@@ -60,7 +60,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <label for="measureSaveTextarea"></label>
-                                        <textarea class="form-control" id="measureSaveTextarea" name="measure"></textarea>
+                                        <textarea class="form-control" id="measureSaveTextarea" name="measure" required autofocus></textarea>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -96,7 +96,7 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <label for="measureEditTextarea" th:for="*{'measureEditTextarea-' + id}"></label>
-                                                            <textarea class="form-control" id="measureEditTextarea" th:id="*{'measureEditTextarea-' + id}" th:text="*{measure}" name="measure"></textarea>
+                                                            <textarea class="form-control" id="measureEditTextarea" th:id="*{'measureEditTextarea-' + id}" th:text="*{measure}" name="measure" autofocus></textarea>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default" data-dismiss="modal">
