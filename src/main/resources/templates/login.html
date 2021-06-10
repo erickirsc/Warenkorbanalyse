@@ -42,13 +42,14 @@
 <body class="container lockscreen d-flex justify-content-center">
 
 <form class="form-signin w-50 text-center" style="margin-top: 20vh" method="post" action="/login">
-    <img class="mb-3" src="../static/img/kaufdortlogo.svg" th:src="@{/img/kaufdortlogo.svg}" alt="LOGO">
+    <img class="mb-4 w-50" src="../static/img/kaufdortlogo.svg" th:src="@{/img/kaufdortlogo.svg}" alt="LOGO">
     <input type="hidden" name="username" value="user"/>
-    <p>
-        <label for="password" class="sr-only">Password</label>
-        <input type="password" id="password" name="password" class="form-control" placeholder="Passwort" autofocus required>
-    </p>
-    <button class="btn btn-block bg-blue" type="submit">Anmelden</button>
+    <label for="password" class="sr-only">Password</label>
+    <input type="password" id="password" name="password" class="form-control" placeholder="Passwort" autofocus required>
+    <div th:if="${param.error}" class="text-danger fw-bold text-left">
+        Passwort ist nicht korrekt
+    </div>
+    <button class="btn btn-block bg-blue mt-4" type="submit">Anmelden</button>
 </form>
 
 <!-- jQuery -->
