@@ -17,6 +17,7 @@ import weka.filters.unsupervised.attribute.NumericCleaner;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AnalysisServiceImplementation implements AnalysisService {
@@ -67,17 +68,17 @@ public class AnalysisServiceImplementation implements AnalysisService {
     @SneakyThrows
     @Override
     public Result processData(List<CustomerCsvEntry> csvEntries, Instances csvData, Instances arffData) {
-        String topDay = weka.findMaximum(arffData, 5);
-        String topTime = weka.findMaximum(arffData, 6);
+        String topDayBySales = topDayBySales(csvEntries);
+        String topTimeBySales = topTimeBySales(csvEntries);
         String[] aprioris = weka.makeApriori(productData(csvData));
-        String topProduct = topProductBySales(csvEntries);
-        String flopProduct = flopProductBySales(csvEntries);
+        String topProductBySales = topProductBySales(csvEntries);
+        String flopProductBySales = flopProductBySales(csvEntries);
 
         Result result = new Result();
-        result.setTopDay(topDay);
-        result.setTopTime(topTime);
-        result.setTopProduct(topProduct);
-        result.setFlopProduct(flopProduct);
+        result.setTopDay(topDayBySales);
+        result.setTopTime(topTimeBySales);
+        result.setTopProduct(topProductBySales);
+        result.setFlopProduct(flopProductBySales);
         result.setDate(new Date());
 
         Map<String, Set<String>> aprioriPositions = new HashMap<>();
@@ -279,5 +280,24 @@ public class AnalysisServiceImplementation implements AnalysisService {
         );
 
         return results;
+    }
+
+    private String topDayBySales(List<CustomerCsvEntry> csvEntries) {
+        Map<String, Integer> totalOfPurchaseAmountByShoppingDay = totalOfPurchaseAmountByShoppingDay(csvEntries);
+        return Collections.max(totalOfPurchaseAmountByShoppingDay.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
+    }
+
+    private Map<String, Integer> totalOfPurchaseAmountByShoppingDay(List<CustomerCsvEntry> csvEntries) {
+        return csvEntries.stream().collect(Collectors.groupingBy(CustomerCsvEntry::getShoppingDay, Collectors.summingInt(CustomerCsvEntry::getPurchaseAmount)));
+    }
+
+    private String topTimeBySales(List<CustomerCsvEntry> csvEntries) {
+        Map<String, Integer> totalOfPurchaseAmountByShoppingTime = totalOfPurchaseAmountByShoppingTime(csvEntries);
+        System.out.println(totalOfPurchaseAmountByShoppingTime);
+        return Collections.max(totalOfPurchaseAmountByShoppingTime.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
+    }
+
+    private Map<String, Integer> totalOfPurchaseAmountByShoppingTime(List<CustomerCsvEntry> csvEntries) {
+        return csvEntries.stream().collect(Collectors.groupingBy(CustomerCsvEntry::getShoppingTime, Collectors.summingInt(CustomerCsvEntry::getPurchaseAmount)));
     }
 }
