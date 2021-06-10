@@ -75,7 +75,7 @@
                                             <button type="button" class="btn btn-default" data-dismiss="modal">
                                                 Schließen
                                             </button>
-                                            <button type="submit" class="btn btn-primary">
+                                            <button type="submit" class="btn bg-blue">
                                                 Kundendaten auswerten
                                             </button>
                                         </div>
@@ -100,7 +100,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="info-box">
-                            <span class="info-box-icon bg-red"><i class="ion ion-arrow-graph-up-right"></i></span>
+                            <span class="info-box-icon bg-green"><i class="ion ion-arrow-graph-up-right"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Umsatzstärkstes Produkt</span>
                                 <span th:text="${result.topProduct}" class="info-box-number">Lindt Schokolade 250g</span>
@@ -109,7 +109,7 @@
                     </div>
                     <div class="col">
                         <div class="info-box">
-                            <span class="info-box-icon bg-green"><i class="ion ion-arrow-graph-down-right"></i></span>
+                            <span class="info-box-icon bg-red"><i class="ion ion-arrow-graph-down-right"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Umsatzschwächstes Produkt</span>
                                 <span th:text="${result.flopProduct}" class="info-box-number">Tymbark Kirsche</span>

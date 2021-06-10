@@ -35,6 +35,9 @@
     <!-- summernote -->
     <link rel="stylesheet" href="../static/plugins/summernote/summernote-bs4.min.css"
           th:href="@{/plugins/summernote/summernote-bs4.min.css}">
+    <!-- Custom style -->
+    <link rel="stylesheet" href="../static/css/color.css"
+          th:href="@{/css/color.css}">
 </head>
 <body class="hold-transition">
 <div class="wrapper">
@@ -49,7 +52,7 @@
             <div class="container-fluid">
                 <div class="row mt-5">
                     <div class="col mb-3">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addMeasureModal">
+                        <button type="button" class="btn bg-green" data-toggle="modal" data-target="#addMeasureModal">
                             <i class="ion-plus-round"></i> Hinzufügen
                         </button>
                         <div class="modal fade" id="addMeasureModal" tabindex="-1" role="dialog">
@@ -66,7 +69,7 @@
                                         <button type="button" class="btn btn-default" data-dismiss="modal">
                                             Abbrechen
                                         </button>
-                                        <button type="submit" class="btn btn-success">Hinzufügen</button>
+                                        <button type="submit" class="btn bg-green">Hinzufügen</button>
                                     </div>
                                 </form>
                             </div>
@@ -84,7 +87,7 @@
                                         <td th:text="${measure.measure}" class="w-75 text-wrap">Maßnahme</td>
                                         <td>
                                             <!-- Edit Section -->
-                                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            <button type="button" class="btn bg-blue" data-toggle="modal"
                                                     th:data-target="${'#editModal-' + measure.id}">
                                                 <i class="ion-edit"></i>
                                             </button>
@@ -102,14 +105,14 @@
                                                             <button type="button" class="btn btn-default" data-dismiss="modal">
                                                                 Abbrechen
                                                             </button>
-                                                            <button type="submit" class="btn btn-primary">Speichern</button>
+                                                            <button type="submit" class="btn bg-green">Speichern</button>
                                                         </div>
                                                     </form>
                                                 </div>
                                             </div>
                                             <!-- Edit Section : End -->
                                             <!-- Delete Section -->
-                                            <button type="button" class="btn btn-danger" data-toggle="modal"
+                                            <button type="button" class="btn bg-red" data-toggle="modal"
                                                     th:data-target="${'#deleteModal-' + measure.id}">
                                                 <i class="ion-trash-a"></i>
                                             </button>

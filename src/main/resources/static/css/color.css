@@ -1,11 +1,15 @@
 .bg-red {
-    background-color: #33a876 !important;
+    background-color: #d61b1b !important;
 }
 
 .bg-green {
-    background-color: #d61b1b !important;
+    background-color: #33a876 !important;
 }
 
 .bg-blue {
     background-color: #397ca3 !important;
+}
+
+.bg-yellow {
+    background: #f29300 !important;
 }
