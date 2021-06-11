@@ -41,7 +41,7 @@
 </head>
 <body class="container lockscreen d-flex justify-content-center">
 
-<form class="form-signin w-50 text-center" style="margin-top: 20vh" method="post" action="/login">
+<form class="form-signin w-50 text-center" style="margin-top: 20vh" method="post" th:action="@{/login}">
     <img class="mb-4 w-50" src="../static/img/kaufdortlogo.svg" th:src="@{/img/kaufdortlogo.svg}" alt="LOGO">
     <input type="hidden" name="username" value="user"/>
     <label for="password" class="sr-only">Password</label>

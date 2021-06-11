@@ -6,10 +6,21 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+/**
+ * Konfiguriert die Sicherheitsschicht der Anwendung.
+ */
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    /**
+     * Überschreibt die Standardsicherheitskonfiguration.
+     *
+     * CSRF wird deaktiviert. Für jede Seite wird eine Authentifizierung gefordert.
+     *
+     * @param http Anfrage, die konfiguriert wird
+     * @throws Exception Alle Fehler werden weitergeleitet
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http

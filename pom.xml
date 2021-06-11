@@ -6,14 +6,14 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.4.5</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>hsel.softsmart</groupId>
     <artifactId>warenkorbanalyse</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>war</packaging>
     <name>Warenkorbanalyse</name>
-    <description>Warenkorbanalysetool</description>
+    <description>Warenkorbanalysetool mit grafischer Weboberfläche</description>
     <properties>
         <java.version>11</java.version>
     </properties>

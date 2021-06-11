@@ -19,6 +19,9 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Stellt die Businesslogik für Analysen zur Verfügung.
+ */
 @Service
 public class AnalysisServiceImplementation implements AnalysisService {
 
@@ -31,6 +34,12 @@ public class AnalysisServiceImplementation implements AnalysisService {
         this.resultRepository = resultRepository;
     }
 
+    /**
+     * Konvertiert eine {@link File} in eine {@link Instances} im CSV Format.
+     *
+     * @param file Zu konvertierende Datei
+     * @return Instance im CSV Format
+     */
     @SneakyThrows
     @Override
     public Instances loadCSVData(File file) {
@@ -44,6 +53,12 @@ public class AnalysisServiceImplementation implements AnalysisService {
         return data;
     }
 
+    /**
+     * Konvertiert eine {@link File} in eine {@link Instances} im ARFF Format.
+     *
+     * @param csvData Zu konvertierende Datei im CSV-Format
+     * @return Instance, im ARFF Format
+     */
     @SneakyThrows
     @Override
     public Instances loadArffData(Instances csvData) {
@@ -65,6 +80,18 @@ public class AnalysisServiceImplementation implements AnalysisService {
         return arffData;
     }
 
+    /**
+     * Verarbeitet die Daten und gibt das Ergebnis aus.
+     *
+     * Dabei werden im Ergebnis das umsatzstärkste und umsatzschwächste Produkt,
+     * die umsatzstärkste Einkaufsuhrzeit, der umsatzstärkste Einkaufstag und
+     * die Apriori-Ergebnisse gepeichert.
+     *
+     * @param csvEntries Liste mit allen CSV-Zeilen
+     * @param csvData Instance im CSV Format
+     * @param arffData Instance im ARFF Format
+     * @return Result
+     */
     @SneakyThrows
     @Override
     public Result processData(List<CustomerCsvEntry> csvEntries, Instances csvData, Instances arffData) {
@@ -101,6 +128,13 @@ public class AnalysisServiceImplementation implements AnalysisService {
         return result;
     }
 
+    /**
+     * Speichert das Ergebnis in der Datenbank.
+     *
+     * Dabei werden ab fünf Ergebnissen immer das älteste Ergebnis gelöscht.
+     *
+     * @param result Das gespeichert werden soll
+     */
     @Override
     @Transactional
     public void saveResult(Result result) {
@@ -111,21 +145,43 @@ public class AnalysisServiceImplementation implements AnalysisService {
         resultRepository.save(result);
     }
 
+    /**
+     * Gibt das letzte gespeicherte Ergebnis aus.
+     *
+     * @return Result oder leeres Result, wenn noch kein Result in der Datenbank liegt
+     */
     @Override
     public Result findLastResult() {
         return resultRepository.findTopByOrderByIdDesc().orElse(new Result());
     }
 
+    /**
+     * Gibt das Ergebnis aus, welches mit der ID gesucht wird
+     *
+     * @param id Zu findende Result-ID
+     * @return Result oder leeres Result, wenn Result nicht gefunden wurde
+     */
     @Override
     public Result findResultById(Long id) {
         return resultRepository.findById(id).orElse(new Result());
     }
 
+    /**
+     * Gibt alle Ergebnisse aus der Datenbank aus.
+     *
+     * @return Liste von allen Ergebnissen in der Datenbank
+     */
     @Override
     public List<Result> resultHistory() {
         return resultRepository.findAll();
     }
 
+    /**
+     * Alle 0 in der Datei, werden durch ein Fragezeichen ersetzt.
+     *
+     * @param data Die gefiltert werden müssen
+     * @return Gefilterte Instance
+     */
     @SneakyThrows
     private Instances filter(Instances data) {
         NumericCleaner nc = new NumericCleaner();
@@ -136,6 +192,12 @@ public class AnalysisServiceImplementation implements AnalysisService {
         return data;
     }
 
+    /**
+     * Filtert die Produkte aus den Daten.
+     *
+     * @param data Die gefiltert werden müssen
+     * @return Gefilterte Instance mit den Produkten
+     */
     private Instances productData(Instances data) {
         Instances productData = new Instances(data);
 
@@ -146,16 +208,34 @@ public class AnalysisServiceImplementation implements AnalysisService {
         return productData;
     }
 
+    /**
+     * Sucht nach dem umsatzstärksten Produkt.
+     *
+     * @param csvEntries Liste mit allen CSV-Einträgen
+     * @return Umsatzstärkste Produkt
+     */
     private String topProductBySales(List<CustomerCsvEntry> csvEntries) {
         Map<String, Integer> totalOfProductSales = totalOfProductSales(csvEntries);
         return Collections.max(totalOfProductSales.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
     }
 
+    /**
+     * Sucht nach dem umsatzschwächsten Produkt.
+     *
+     * @param csvEntries Liste mit allen CSV-Einträgen
+     * @return Umsatzschwächste Produkt
+     */
     private String flopProductBySales(List<CustomerCsvEntry> csvEntries) {
         Map<String, Integer> totalOfProductSales = totalOfProductSales(csvEntries);
         return Collections.min(totalOfProductSales.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
     }
 
+    /**
+     * Berechnet von jedem Produkt die Umsatzsumme.
+     *
+     * @param csvEntries Liste mit allen CSV-Einträgen
+     * @return Die Umsatzsumme von jedem Produkt
+     */
     private Map<String, Integer> totalOfProductSales(List<CustomerCsvEntry> csvEntries) {
         Map<String, Integer> results = new HashMap<>();
 
@@ -282,21 +362,44 @@ public class AnalysisServiceImplementation implements AnalysisService {
         return results;
     }
 
+    /**
+     * Sucht nach dem umsatzstärksten Wochentag.
+     *
+     * @param csvEntries Liste mit allen CSV-Einträgen
+     * @return Umsatzstärkster Wochentag
+     */
     private String topDayBySales(List<CustomerCsvEntry> csvEntries) {
         Map<String, Integer> totalOfPurchaseAmountByShoppingDay = totalOfPurchaseAmountByShoppingDay(csvEntries);
         return Collections.max(totalOfPurchaseAmountByShoppingDay.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
     }
 
+    /**
+     * Berechnet die Umsatzsummen der jeweiligen Wochentagen.
+     *
+     * @param csvEntries Liste mit allen CSV-Einträgen
+     * @return Umsatzsummen der jeweiligen Wochentagen.
+     */
     private Map<String, Integer> totalOfPurchaseAmountByShoppingDay(List<CustomerCsvEntry> csvEntries) {
         return csvEntries.stream().collect(Collectors.groupingBy(CustomerCsvEntry::getShoppingDay, Collectors.summingInt(CustomerCsvEntry::getPurchaseAmount)));
     }
 
+    /**
+     * Sucht nach der umsatzstärksten Uhrzeit.
+     *
+     * @param csvEntries Liste mit allen CSV-Einträgen
+     * @return Umsatzstärkste Uhrzeit
+     */
     private String topTimeBySales(List<CustomerCsvEntry> csvEntries) {
         Map<String, Integer> totalOfPurchaseAmountByShoppingTime = totalOfPurchaseAmountByShoppingTime(csvEntries);
-        System.out.println(totalOfPurchaseAmountByShoppingTime);
         return Collections.max(totalOfPurchaseAmountByShoppingTime.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
     }
 
+    /**
+     * Berechnet die Umsatzsummen der jeweiligen Uhrzeiten.
+     *
+     * @param csvEntries Liste mit allen CSV-Einträgen
+     * @return Umsatzsummen der jeweiligen Uhrzeiten.
+     */
     private Map<String, Integer> totalOfPurchaseAmountByShoppingTime(List<CustomerCsvEntry> csvEntries) {
         return csvEntries.stream().collect(Collectors.groupingBy(CustomerCsvEntry::getShoppingTime, Collectors.summingInt(CustomerCsvEntry::getPurchaseAmount)));
     }

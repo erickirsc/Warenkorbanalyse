@@ -27,6 +27,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Webschnittstelle für {@code /path}.
+ */
 @Controller
 @RequestMapping("/analysis")
 public class AnalysisController {
@@ -38,6 +41,15 @@ public class AnalysisController {
         this.analysisService = analysisService;
     }
 
+    /**
+     * Wird bei GET-Anfragen ausgeführt.
+     *
+     * Liest die letzten fünf Ergebnisse aus und koppelt diese an die View an.
+     * Die View wird das letzte Ergebnis anzeigen.
+     *
+     * @param model Die Referenz zur View
+     * @return Sendet dem Client die analysis View
+     */
     @GetMapping
     public String index(Model model) {
         Result result = analysisService.findLastResult();
@@ -60,6 +72,16 @@ public class AnalysisController {
         return "analysis";
     }
 
+    /**
+     * Wird bei POST-Anfragen ausgeführt.
+     *
+     * Liest die letzten fünf Ergebnisse aus und koppelt diese an die View an.
+     * Die View wird das Ergebnis anzeigen, die ausgewählt wurde.
+     *
+     * @param id ErgebnisID die angefragt wird
+     * @param model Die Referenz zur View
+     * @return Sendet dem Client die analysis View
+     */
     @PostMapping
     public String olderResult(@RequestParam("id") Long id, Model model) {
         Result result = analysisService.findResultById(id);
@@ -82,6 +104,13 @@ public class AnalysisController {
         return "analysis";
     }
 
+    /**
+     * Verarbeitet die hochgeladene Datei und speichert die Ergebnisse in der Datenbank ab.
+     *
+     * @param file Hochgeladene Datei mit Kundeninformationen
+     * @return Client wird an /analysis weitergeleitet
+     * @throws IOException Zeigt IO Fehler an
+     */
     @PostMapping("/upload")
     public String upload(@RequestParam("file") MultipartFile file) throws IOException {
         File csvFile = FileUtil.parse(file);
