@@ -42,10 +42,10 @@
 <body class="container lockscreen d-flex justify-content-center">
 
 <form class="form-signin w-50 text-center" style="margin-top: 20vh" method="post" th:action="@{/login}">
-    <img class="mb-4 w-50" src="../static/img/kaufdortlogo.svg" th:src="@{/img/kaufdortlogo.svg}" alt="LOGO">
+    <img class="mb-4 w-50" src="../static/img/kaufdortlogo.png" th:src="@{/img/kaufdortlogo.png}" alt="LOGO">
     <input type="hidden" name="username" value="user"/>
     <label for="password" class="sr-only">Password</label>
-    <input type="password" id="password" name="password" class="form-control" placeholder="Passwort" autofocus required>
+    <input th:classappend="${param.error} ? 'is-invalid' : ''" type="password" id="password" name="password" class="form-control" placeholder="Passwort" autofocus required>
     <div th:if="${param.error}" class="text-danger fw-bold text-left">
         Passwort ist nicht korrekt
     </div>
