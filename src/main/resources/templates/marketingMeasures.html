@@ -3,41 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>KaufDort | Marketing</title>
+    <title>KaufDort | Marketingmaßnahmen</title>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="../static/plugins/fontawesome-free/css/all.min.css"
-          th:href="@{/plugins/fontawesome-free/css/all.min.css}">
+    <link rel="stylesheet" href="../static/styles/vendor/fontawesome/css/all.min.css" th:href="@{/styles/vendor/fontawesome/css/all.min.css}">
     <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="../static/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css"
-          th:href="@{/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css}">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="../static/plugins/icheck-bootstrap/icheck-bootstrap.min.css"
-          th:href="@{/plugins/icheck-bootstrap/icheck-bootstrap.min.css}">
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="../static/plugins/jqvmap/jqvmap.min.css" th:href="@{/plugins/jqvmap/jqvmap.min.css}">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../static/dist/css/adminlte.min.css" th:href="@{/dist/css/adminlte.min.css}">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="../static/plugins/overlayScrollbars/css/OverlayScrollbars.min.css"
-          th:href="@{/plugins/overlayScrollbars/css/OverlayScrollbars.min.css}">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="../static/plugins/daterangepicker/daterangepicker.css"
-          th:href="@{/plugins/daterangepicker/daterangepicker.css}">
-    <!-- summernote -->
-    <link rel="stylesheet" href="../static/plugins/summernote/summernote-bs4.min.css"
-          th:href="@{/plugins/summernote/summernote-bs4.min.css}">
+    <link rel="stylesheet" href="../static/styles/vendor/ionicons/css/ionicons.min.css" th:href="@{/styles/vendor/ionicons/css/ionicons.min.css}">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../static/styles/vendor/bootstrap/bootstrap.min.css" th:href="@{/styles/vendor/bootstrap/bootstrap.min.css}">
+    <!-- AdminLTE -->
+    <link rel="stylesheet" href="../static/styles/vendor/adminlte/adminlte.min.css" th:href="@{/styles/vendor/adminlte/adminlte.min.css}">
     <!-- Custom style -->
-    <link rel="stylesheet" href="../static/css/color.css"
-          th:href="@{/css/color.css}">
+    <link rel="stylesheet" href="../static/styles/warenkorbanalyse.css" th:href="@{/styles/warenkorbanalyse.css}">
 </head>
 <body class="hold-transition">
 <div class="wrapper">
@@ -52,8 +32,8 @@
             <div class="container-fluid">
                 <div class="row mt-5">
                     <div class="col mb-3">
-                        <button type="button" class="btn bg-green" data-toggle="modal" data-target="#addMeasureModal">
-                            <i class="ion-plus-round"></i> Hinzufügen
+                        <button type="button" class="btn bg-green" data-bs-toggle="modal" data-bs-target="#addMeasureModal">
+                            <i class="fas fa-plus"></i> Hinzufügen
                         </button>
                         <div class="modal fade" id="addMeasureModal" tabindex="-1" role="dialog">
                             <div class="modal-dialog" role="document">
@@ -63,10 +43,11 @@
                                     </div>
                                     <div class="modal-body">
                                         <label for="measureSaveTextarea"></label>
-                                        <textarea class="form-control" id="measureSaveTextarea" name="measure" required></textarea>
+                                        <textarea class="form-control" id="measureSaveTextarea" name="measure"
+                                                  required></textarea>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                                        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
                                             Abbrechen
                                         </button>
                                         <button type="submit" class="btn bg-green">Hinzufügen</button>
@@ -87,36 +68,45 @@
                                         <td th:text="${measure.measure}" class="w-75 text-wrap">Maßnahme</td>
                                         <td>
                                             <!-- Edit Section -->
-                                            <button type="button" class="btn bg-blue" data-toggle="modal"
-                                                    th:data-target="${'#editModal-' + measure.id}">
-                                                <i class="ion-edit"></i>
+                                            <button type="button" class="btn bg-blue" data-bs-toggle="modal"
+                                                    th:data-bs-target="${'#editModal-' + measure.id}">
+                                                <i class="fas fa-pencil-alt"></i>
                                             </button>
-                                            <div class="modal fade" th:id="${'editModal-' + measure.id}" tabindex="-1" role="dialog">
+                                            <div class="modal fade" th:id="${'editModal-' + measure.id}" tabindex="-1"
+                                                 role="dialog">
                                                 <div class="modal-dialog" role="document">
-                                                    <form method="post" th:action="@{/marketing-measures/edit/{id}(id=${measure.id})}" th:object="${measure}" class="modal-content">
+                                                    <form method="post"
+                                                          th:action="@{/marketing-measures/edit/{id}(id=${measure.id})}"
+                                                          th:object="${measure}" class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title">Marketingmaßnahme bearbeiten</h5>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <label for="measureEditTextarea" th:for="*{'measureEditTextarea-' + id}"></label>
-                                                            <textarea class="form-control" id="measureEditTextarea" th:id="*{'measureEditTextarea-' + id}" th:text="*{measure}" name="measure"></textarea>
+                                                            <label for="measureEditTextarea"
+                                                                   th:for="*{'measureEditTextarea-' + id}"></label>
+                                                            <textarea class="form-control" id="measureEditTextarea"
+                                                                      th:id="*{'measureEditTextarea-' + id}"
+                                                                      th:text="*{measure}" name="measure"></textarea>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                            <button type="button" class="btn btn-default"
+                                                                    data-bs-dismiss="modal">
                                                                 Abbrechen
                                                             </button>
-                                                            <button type="submit" class="btn bg-green">Speichern</button>
+                                                            <button type="submit" class="btn bg-green">Speichern
+                                                            </button>
                                                         </div>
                                                     </form>
                                                 </div>
                                             </div>
                                             <!-- Edit Section : End -->
                                             <!-- Delete Section -->
-                                            <button type="button" class="btn bg-red" data-toggle="modal"
-                                                    th:data-target="${'#deleteModal-' + measure.id}">
-                                                <i class="ion-trash-a"></i>
+                                            <button type="button" class="btn bg-red" data-bs-toggle="modal"
+                                                    th:data-bs-target="${'#deleteModal-' + measure.id}">
+                                                <i class="ion ion-ios-trash"></i>
                                             </button>
-                                            <div class="modal fade" th:id="${'deleteModal-' + measure.id}" tabindex="-1" role="dialog">
+                                            <div class="modal fade" th:id="${'deleteModal-' + measure.id}" tabindex="-1"
+                                                 role="dialog">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -126,10 +116,12 @@
                                                             Diese Maßnahme wirklich löschen?
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                            <button type="button" class="btn btn-default"
+                                                                    data-bs-dismiss="modal">
                                                                 Abbrechen
                                                             </button>
-                                                            <a class="btn btn-danger" th:href="@{/marketing-measures/delete/{id}(id=${measure.id})}">Löschen</a>
+                                                            <a class="btn btn-danger"
+                                                               th:href="@{/marketing-measures/delete/{id}(id=${measure.id})}">Löschen</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -150,38 +142,12 @@
     <footer th:replace="fragments/footer.html :: footer" class="main-footer">FOOTER</footer>
 </div>
 <!-- jQuery -->
-<script src="plugins/jquery/jquery.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="plugins/jquery-ui/jquery-ui.min.js"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-    $.widget.bridge('uibutton', $.ui.button)
-
-</script>
-<!-- Bootstrap 4 -->
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- ChartJS -->
-<script src="plugins/chart.js/Chart.min.js"></script>
-<!-- Sparkline -->
-<script src="plugins/sparklines/sparkline.js"></script>
-<!-- JQVMap -->
-<script src="plugins/jqvmap/jquery.vmap.min.js"></script>
-<script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-<!-- jQuery Knob Chart -->
-<script src="plugins/jquery-knob/jquery.knob.min.js"></script>
-<!-- daterangepicker -->
-<script src="plugins/moment/moment.min.js"></script>
-<script src="plugins/daterangepicker/daterangepicker.js"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-<!-- Summernote -->
-<script src="plugins/summernote/summernote-bs4.min.js"></script>
-<!-- overlayScrollbars -->
-<script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-<!-- AdminLTE App -->
-<script src="dist/js/adminlte.js"></script>
-<script src="modal.js"></script>
-
-
+<script src="../static/scripts/vendor/jquery/jquery.min.js" th:src="@{/scripts/vendor/jquery/jquery.min.js}"></script>
+<!-- Font Awesome -->
+<script src="../static/scripts/vendor/fontawesome/all.min.js" th:src="@{/scripts/vendor/fontawesome/all.min.js}"></script>
+<!-- Bootstrap -->
+<script src="../static/scripts/vendor/bootstrap/bootstrap.bundle.min.js" th:src="@{/scripts/vendor/bootstrap/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE -->
+<script src="../static/scripts/vendor/adminlte/adminlte.min.js" th:src="@{/scripts/vendor/adminlte/adminlte.min.js}"></script>
 </body>
 </html>

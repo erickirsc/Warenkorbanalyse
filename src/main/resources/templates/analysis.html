@@ -5,39 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>KaufDort | Auswertung</title>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="../static/plugins/fontawesome-free/css/all.min.css"
-          th:href="@{/plugins/fontawesome-free/css/all.min.css}">
+    <link rel="stylesheet" href="../static/styles/vendor/fontawesome/css/all.min.css" th:href="@{/styles/vendor/fontawesome/css/all.min.css}">
     <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="../static/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css"
-          th:href="@{/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css}">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="../static/plugins/icheck-bootstrap/icheck-bootstrap.min.css"
-          th:href="@{/plugins/icheck-bootstrap/icheck-bootstrap.min.css}">
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="../static/plugins/jqvmap/jqvmap.min.css" th:href="@{/plugins/jqvmap/jqvmap.min.css}">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../static/dist/css/adminlte.min.css" th:href="@{/dist/css/adminlte.min.css}">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="../static/plugins/overlayScrollbars/css/OverlayScrollbars.min.css"
-          th:href="@{/plugins/overlayScrollbars/css/OverlayScrollbars.min.css}">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="../static/plugins/daterangepicker/daterangepicker.css"
-          th:href="@{/plugins/daterangepicker/daterangepicker.css}">
-    <!-- summernote -->
-    <link rel="stylesheet" href="../static/plugins/summernote/summernote-bs4.min.css"
-          th:href="@{/plugins/summernote/summernote-bs4.min.css}">
+    <link rel="stylesheet" href="../static/styles/vendor/ionicons/css/ionicons.min.css" th:href="@{/styles/vendor/ionicons/css/ionicons.min.css}">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../static/styles/vendor/bootstrap/bootstrap.min.css" th:href="@{/styles/vendor/bootstrap/bootstrap.min.css}">
+    <!-- AdminLTE -->
+    <link rel="stylesheet" href="../static/styles/vendor/adminlte/adminlte.min.css" th:href="@{/styles/vendor/adminlte/adminlte.min.css}">
     <!-- Custom style -->
-    <link rel="stylesheet" href="../static/css/color.css"
-          th:href="@{/css/color.css}">
+    <link rel="stylesheet" href="../static/styles/warenkorbanalyse.css" th:href="@{/styles/warenkorbanalyse.css}">
 </head>
 <body class="hold-transition">
 <div class="wrapper">
@@ -56,13 +36,13 @@
                 <div class="row mt-2">
                     <div class="col mb-3">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default" data-toggle="modal"
-                                    data-target="#uploadModal">
+                            <button type="button" class="btn btn-default" data-bs-toggle="modal"
+                                    data-bs-target="#uploadModal">
                                 <!-- Button trigger modal -->
-                                <i class="ion-upload"></i> Kundendaten hochladen
+                                <i class="ion ion-ios-cloud-upload"></i> Kundendaten hochladen
                             </button>
                             <!-- Modal -->
-                            <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog">
+                            <div id="uploadModal" class="modal fade" aria-hidden="true" tabindex="-1" role="dialog">
                                 <div class="modal-dialog" role="document">
                                     <form method="post" th:action="@{/analysis/upload}" id="csvUpload" class="modal-content" enctype="multipart/form-data">
                                         <div class="modal-header">
@@ -72,7 +52,7 @@
                                             <input type="file" name="file" accept="text/csv, .csv" class="form-control" id="customFile" required/>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                            <button type="button" class="btn btn-default" data-bs-dismiss="modal">
                                                 Schließen
                                             </button>
                                             <button type="submit" class="btn bg-blue">
@@ -83,7 +63,7 @@
                                 </div>
                             </div>
                             <button th:disabled="${resultHistory.size == 0}" type="button" class="btn btn-default dropdown-toggle dropdown-icon"
-                                    data-toggle="dropdown">
+                                    data-bs-toggle="dropdown">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <form th:action="@{/analysis}" method="post" class="dropdown-menu">
@@ -100,7 +80,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="info-box">
-                            <span class="info-box-icon bg-green"><i class="ion ion-arrow-graph-up-right"></i></span>
+                            <span class="info-box-icon bg-green"><i class="ion ion-ios-trending-up"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Umsatzstärkstes Produkt</span>
                                 <span th:text="${result.topProduct}" class="info-box-number">Lindt Schokolade 250g</span>
@@ -109,7 +89,7 @@
                     </div>
                     <div class="col">
                         <div class="info-box">
-                            <span class="info-box-icon bg-red"><i class="ion ion-arrow-graph-down-right"></i></span>
+                            <span class="info-box-icon bg-red"><i class="ion ion-ios-trending-down"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Umsatzschwächstes Produkt</span>
                                 <span th:text="${result.flopProduct}" class="info-box-number">Tymbark Kirsche</span>
@@ -120,7 +100,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="info-box">
-                            <span class="info-box-icon bg-blue"><i class="ion ion-calendar"></i></span>
+                            <span class="info-box-icon bg-blue"><i class="ion ion-ios-calendar"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Umsatzstärkster Einkaufstag der Woche</span>
                                 <span th:text="${result.topDay}" class="info-box-number">Mittwoch</span>
@@ -129,7 +109,7 @@
                     </div>
                     <div class="col">
                         <div class="info-box">
-                            <span class="info-box-icon bg-blue"><i class="ion ion-clock"></i></span>
+                            <span class="info-box-icon bg-blue"><i class="far fa-clock"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Umsatzstärkste Einkaufsuhrzeit der Woche</span>
                                 <span th:text="${result.topTime}" class="info-box-number">13:00</span>
@@ -172,37 +152,12 @@
     <footer th:replace="fragments/footer.html :: footer" class="main-footer">FOOTER</footer>
 </div>
 <!-- jQuery -->
-<script src="plugins/jquery/jquery.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="plugins/jquery-ui/jquery-ui.min.js"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-    $.widget.bridge('uibutton', $.ui.button)
-
-
-</script>
-<!-- Bootstrap 4 -->
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- ChartJS -->
-<script src="plugins/chart.js/Chart.min.js"></script>
-<!-- Sparkline -->
-<script src="plugins/sparklines/sparkline.js"></script>
-<!-- JQVMap -->
-<script src="plugins/jqvmap/jquery.vmap.min.js"></script>
-<script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-<!-- jQuery Knob Chart -->
-<script src="plugins/jquery-knob/jquery.knob.min.js"></script>
-<!-- daterangepicker -->
-<script src="plugins/moment/moment.min.js"></script>
-<script src="plugins/daterangepicker/daterangepicker.js"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-<!-- Summernote -->
-<script src="plugins/summernote/summernote-bs4.min.js"></script>
-<!-- overlayScrollbars -->
-<script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-<!-- AdminLTE App -->
-<script src="dist/js/adminlte.js"></script>
-<script src="modal.js"></script>
+<script src="../static/scripts/vendor/jquery/jquery.min.js" th:src="@{/scripts/vendor/jquery/jquery.min.js}"></script>
+<!-- Font Awesome -->
+<script src="../static/scripts/vendor/fontawesome/all.min.js" th:src="@{/scripts/vendor/fontawesome/all.min.js}"></script>
+<!-- Bootstrap -->
+<script src="../static/scripts/vendor/bootstrap/bootstrap.bundle.min.js" th:src="@{/scripts/vendor/bootstrap/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE -->
+<script src="../static/scripts/vendor/adminlte/adminlte.min.js" th:src="@{/scripts/vendor/adminlte/adminlte.min.js}"></script>
 </body>
 </html>
